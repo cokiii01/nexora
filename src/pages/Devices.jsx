@@ -7,7 +7,6 @@ const KIND = {
   pressure: { label: 'Pressure', hw: '0–10 bar transducer (0.5–4.5 V)', max: 6, step: 0.05 },
   level: { label: 'Water level', hw: 'JSN-SR04T waterproof ultrasonic', max: 3, step: 0.01 },
   rain: { label: 'Rain gauge', hw: 'Tipping bucket (reed switch)', max: 150, step: 1 },
-  bin: { label: 'Bin fill', hw: 'JSN-SR04T on bin lid', max: 100, step: 1 },
 }
 
 function DeviceRow({ d, staff, onChange }) {
@@ -28,7 +27,7 @@ function DeviceRow({ d, staff, onChange }) {
         <span><strong className="mono">{d.device_id}</strong><small>{d.name}</small></span>
       </span>
       <span className="ov-num">{k.label}</span>
-      <span className="dv-val"><b>{fmt.num(d.last_value, d.kind === 'bin' || d.kind === 'rain' ? 0 : 2)}</b> {d.unit}</span>
+      <span className="dv-val"><b>{fmt.num(d.last_value, d.kind === 'rain' ? 0 : 2)}</b> {d.unit}</span>
       <span>
         {d.fault
           ? <b className="ov-stage crit" title={d.fault}>FAULT</b>
@@ -55,8 +54,10 @@ function Devices({ session }) {
   if (loading && !data) return <><ApiDown error={error} /><Loading /></>
   if (!data) return <ApiDown error={error} />
 
-  const devs = data.devices.filter((d) => kind === 'all' || d.kind === kind)
-  const real = data.devices.filter((d) => d.source === 'device').length
+  // waste bins are outside the water story, so they are not listed here
+  const water = data.devices.filter((d) => KIND[d.kind])
+  const devs = water.filter((d) => kind === 'all' || d.kind === kind)
+  const real = water.filter((d) => d.source === 'device').length
   const toggleSim = async () => {
     await api('/sim/enabled', { method: 'POST', body: { enabled: !data.sim_enabled } }).catch(() => {})
     refresh()
@@ -70,16 +71,16 @@ function Devices({ session }) {
       </PageHead>
 
       <div className="ov-card cx-stats4" style={{ '--i': 0 }}>
-        <Stat label="Online" value={data.devices.filter((d) => d.online).length} unit={`/ ${data.devices.length}`} tone="ok"
-          note={data.devices.some((d) => d.fault) ? `${data.devices.filter((d) => d.fault).length} sensor fault` : 'All sensors healthy'} />
+        <Stat label="Online" value={water.filter((d) => d.online).length} unit={`/ ${water.length}`} tone="ok"
+          note={water.some((d) => d.fault) ? `${water.filter((d) => d.fault).length} sensor fault` : 'All sensors healthy'} />
         <Stat label="Real ESP32 nodes" value={real} note={real ? 'Live hardware reporting' : 'Prototype: simulated'} />
-        <Stat label="Readings stored" value={fmt.num(data.devices.reduce((s, d) => s + (d.readings_count || 0), 0))} />
+        <Stat label="Readings stored" value={fmt.num(water.reduce((s, d) => s + (d.readings_count || 0), 0))} />
         <Stat label="Simulator" value={data.sim_enabled ? 'Running' : 'Paused'} tone={data.sim_enabled ? 'ok' : 'warn'} note="Same path as hardware" />
       </div>
 
       <Card title="Sensor nodes" icon="◉" i={1} className="ov-table-card" actions={
         <div className="ov-seg-switch" role="group" aria-label="Filter by type">
-          {['all', 'flow', 'pressure', 'level', 'rain', 'bin'].map((k) => (
+          {['all', 'flow', 'pressure', 'level', 'rain'].map((k) => (
             <button key={k} type="button" className={kind === k ? 'on' : ''} onClick={() => setKind(k)}>{k === 'all' ? 'All' : KIND[k].label}</button>
           ))}
         </div>

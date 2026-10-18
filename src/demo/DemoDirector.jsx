@@ -71,6 +71,7 @@ function ActiveDemo({ onNavigate, onExit, children }) {
   const { view, start, cancel } = d
   const sc = SCENES[view.index]
   const [fs, setFs] = useState(false)
+  const [hidden, setHidden] = useState(false) // H hides the caption card so the screen is clear for recording
 
   useEffect(() => {
     start()
@@ -102,6 +103,7 @@ function ActiveDemo({ onNavigate, onExit, children }) {
       else if (e.key === 'ArrowLeft') d.prev()
       else if (e.key === ' ' && e.target?.tagName !== 'BUTTON') { e.preventDefault(); d.toggle() }
       else if (e.key === 'f' || e.key === 'F') toggleFs()
+      else if (e.key === 'h' || e.key === 'H') setHidden((v) => !v)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -119,7 +121,7 @@ function ActiveDemo({ onNavigate, onExit, children }) {
         {!done && <div key={`title-${sc.id}`} className="demo-title" aria-hidden="true"><span>{sc.kicker} / {SCENES.length}</span><h2>{sc.title}</h2></div>}
         <div className="demo-vignette" aria-hidden="true" />
 
-        <section className="demo-card" aria-live="polite" aria-label="Guided demo">
+        <section className={`demo-card${hidden ? ' is-hidden' : ''}`} aria-live="polite" aria-label="Guided demo">
           {done ? (
             <>
               <span className="demo-kicker">DEMO COMPLETE</span>
@@ -135,7 +137,7 @@ function ActiveDemo({ onNavigate, onExit, children }) {
             <>
               <div className="demo-top">
                 <span className="demo-kicker">{sc.kicker} · {sc.title}</span>
-                <span className="demo-keys" aria-hidden="true">Space pause · ← → scenes · F fullscreen</span>
+                <span className="demo-keys" aria-hidden="true">Space pause · ← → scenes · F fullscreen · H hide</span>
               </div>
               {view.line && <h3>{view.line.t}</h3>}
               {view.line?.s && <p>{view.line.s}</p>}
