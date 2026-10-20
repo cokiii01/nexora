@@ -1,103 +1,141 @@
-// The guided demo script. Every step that matters waits for the REAL backend state (`until`); timers only pace the captions.
+// The guided demo = the 5-minute video. Every step that matters waits for the REAL backend state (`until`); timers only pace the captions.
 //
-//   lines  – captions shown in order (ms = how long each stays)
+//   lines  – captions shown in order. `vo` is the voice-over you read aloud; the time a line stays on screen is
+//            worked out from the length of its `vo` (about 2.2 words a second), so the film and the script stay in step.
 //   enter  – what to trigger on the backend when the scene starts (skipped when going back)
 //   until  – polled every ~1.5 s; the scene does not finish until it returns true (or the timeout passes)
-//   after  – caption shown once `until` is satisfied
+//   after  – line shown once `until` is satisfied
+//   card   – 'intro' | 'outro': a full-screen title card instead of the caption bar
+//   zoom   – selector to gently zoom into while the scene plays
+//   cue    – note for the presenter window (e.g. "press Approve now")
 import { api } from '../lib/api'
 
 const RANK = { NORMAL: 0, WASPADA: 1, AMARAN: 2, BAHAYA: 3 }
 export const SENSOR = 'DL-B1'          // the drain sensor that "breaks" in the demo
 export const STORM_MM_H = 120          // strongest rainfall the level model reacts to
+export const LIVE_URL = 'nexora-phi-inky.vercel.app'
 
 const worstStage = (flood) =>
   Math.max(0, ...flood.sensors.filter((s) => s.kind === 'level' && !s.fault).map((s) => RANK[s.stage] || 0))
 
 export const resetWorld = () => api('/sim/reset', { method: 'POST' })
 
+// voice-over → on-screen time (words ÷ 2.2 per second, plus a short breath)
+export const voMs = (vo, min = 3500) => Math.max(min, Math.round((vo.trim().split(/\s+/).length / 2.2) * 1000) + 700)
+const L = (t, s, vo, min) => ({ t, s, vo, ms: voMs(vo, min) })
+
 export const SCENES = [
   {
-    id: 'living', kicker: 'Scene 1', title: 'The living township', page: 'overview',
+    id: 'intro', kicker: 'Opening', title: 'NEXORA', page: 'overview', card: 'intro',
     enter: resetWorld,
+    lines: [{ t: 'NEXORA', s: 'Township water fails silently.', vo: 'Township water fails silently.', ms: 6500 }],
+  },
+  {
+    id: 'living', kicker: 'Scene 1', title: 'The living township', page: 'overview',
     lines: [
-      { t: 'Township water fails silently.', s: 'Hidden leaks, blocked drains and sensors that die unnoticed. NEXORA watches flow meters, drain and pond levels and a rain gauge through one ingest API — the same call a real ESP32 makes.', ms: 7000 },
-      { t: 'Every alert you will see comes from a readable rule.', s: 'No black box. Sensor data is simulated until hardware is installed; the rules, jobs and approvals are real.', ms: 6500 },
+      L('Township water fails silently.', 'Leaks nobody sees. Drains nobody checks. Sensors nobody trusts.',
+        'A leak can run for days, because at three in the morning nobody is using water, so nobody notices. A drain blocks, and the first sign is a flooded road. And when a sensor freezes, it either lies, or stays silent.'),
+      L('NEXORA watches the whole township.', '3 zones · flow meters · drain and pond levels · a rain gauge',
+        'This is NEXORA, watching one township: three zones, flow meters, drain and pond levels, and a rain gauge. One system, one screen.'),
+      L('A hidden leak, found at 3 am.', 'Zone C: night flow never drops.',
+        'Already, it has found something. In Zone C the water never drops at night. That is a hidden leak, about nineteen cubic metres a day, caught without a single resident calling in.'),
+      L('Every alert comes from a readable rule.', 'Sensor data is simulated until hardware is installed. Rules, jobs and approvals are real.',
+        'One honest note. The sensor data here is simulated until hardware is installed. But the rules, the jobs, and the approvals you are about to see are real.'),
     ],
   },
   {
     id: 'fault', kicker: 'Scene 2', title: 'A sensor goes blind', page: 'devices',
-    spotlight: `[data-demo="dev-${SENSOR}"]`,
+    spotlight: `[data-demo="dev-${SENSOR}"]`, zoom: `[data-demo="dev-${SENSOR}"]`,
     enter: async () => {
       await api('/sim/rain', { method: 'POST', body: { mm_per_h: STORM_MM_H } })
       await api('/sim/fault', { method: 'POST', body: { device_id: SENSOR, mode: 'stuck' } })
     },
     lines: [
-      { t: 'A cloudburst builds over the township.', s: `The rain gauge climbs towards ${STORM_MM_H} mm/h.`, ms: 6000 },
-      { t: `At the same moment, drain sensor ${SENSOR} freezes.`, s: 'It keeps sending the same level while the rain pours. NEXORA compares it with the rain gauge and notices.', ms: 6500 },
+      L('A cloudburst builds.', `The rain gauge climbs towards ${STORM_MM_H} mm/h.`,
+        'Now a storm builds over the township. The rain gauge climbs fast.'),
+      L(`Drain sensor ${SENSOR} freezes.`, 'The same level, again and again, while the rain pours.',
+        'At the same moment, a drain sensor in Zone B freezes. It keeps reporting the same level while the rain pours. A normal system would believe it.'),
+      L('NEXORA checks it against the rain gauge.', 'Eight identical readings in heavy rain is not a calm drain.',
+        'NEXORA does not. It checks the sensor against the rain gauge. Eight identical readings during heavy rain? That is not a calm drain. That is a broken sensor.'),
     ],
     waitNote: 'Confirming the flatline — the rule needs 8 identical readings in a row…',
     until: async () => (await api('/devices')).devices.some((d) => d.device_id === SENSOR && d.fault),
     timeoutMs: 90000,
-    after: { t: 'Sensor fault confirmed — its readings are no longer trusted.', s: 'A maintenance job for IoT Maintenance 05 was opened automatically. Faulty data can never trigger a false flood alarm.', ms: 6500 },
+    after: L('Sensor marked faulty. A repair job opens by itself.', 'A broken sensor can never raise a false alarm, or hide a real one.',
+      'The sensor is marked as not trusted, and a repair job opens automatically. A broken sensor can never cause a false alarm, and it can never hide a real flood.'),
   },
   {
     id: 'flood', kicker: 'Scene 3', title: 'The flood is still caught', page: 'flood',
     spotlight: '[data-demo="flood-DL-C1"]',
     lines: [
-      { t: 'The remaining sensors still see the water rise.', s: 'Drain and pond levels follow the JPS stages: Normal → Alert → Warning → Danger, with hysteresis so alerts do not flicker.', ms: 7000 },
+      L('The other sensors still see the water rise.', 'Normal → Alert → Warning → Danger',
+        'The other sensors are still working, and they see the water rising. Levels move through Normal, Alert, Warning and Danger, with a buffer so alerts do not flicker.'),
     ],
     waitNote: 'Waiting for the pond to reach Warning stage…',
     until: async () => worstStage(await api('/flood')) >= RANK.AMARAN,
     timeoutMs: 180000,
-    after: { t: 'Warning stage reached.', s: 'Residents of the zone received the alert, and a dispatch job was raised — waiting for a person, not sent automatically.', ms: 6500 },
+    after: L('Warning stage. Residents alerted.', 'A dispatch job is waiting for a person.',
+      'The pond reaches Warning. Residents in that zone are alerted, and a dispatch job is raised. But it is not sent automatically. It is waiting for a person.'),
   },
   {
     id: 'twin', kicker: 'Scene 4', title: 'The same event, in 3D', page: 'digitalTwin', scroll: '.township-3d-shell',
     lines: [
-      { t: 'The Digital Twin shows the live state.', s: 'Rain falls over the model, the pond and drains fill to the real sensor level — and the broken sensor is shown grey as SENSOR FAULT.', ms: 7500 },
-      { t: 'Colour follows the flood stage; the model is driven by the same data as every other screen.', s: 'Nothing here is a separate animation.', ms: 5500 },
+      L('The same event, in 3D.', 'The pond fills to the real sensor level. The faulty sensor shows grey.',
+        'Here is the same event in 3D. The pond fills to the real sensor level, and the faulty sensor shows grey.'),
+      L('One source of truth.', 'Nothing here is a separate animation.',
+        'Nothing here is a separate animation. Every screen runs on the same data.'),
     ],
   },
   {
     id: 'graph', kicker: 'Scene 5', title: 'Everything is connected', page: 'intelligenceGraph',
     lines: [
-      { t: 'The Intelligence Graph links cause and effect.', s: 'Sensor → alert → job → team → residents. The frozen sensor, the flood alert and the open jobs sit on one graph.', ms: 7500 },
-      { t: 'Red nodes need attention — click one to follow its chain.', s: 'Built from live data every few seconds.', ms: 5500 },
+      L('Cause and effect, connected.', 'Sensor → alert → job → team → residents',
+        'The Intelligence Graph links cause and effect: the frozen sensor, the flood alert, the open jobs and the team, in one chain.'),
     ],
   },
   {
     id: 'approve', kicker: 'Scene 6', title: 'A human decides', page: 'workOrders', focusApproval: true,
     spotlight: ['[data-demo="approve-btn"]', '[data-demo="approval-panel"]'],
     lines: [
-      { t: 'NEXORA recommends. A person authorises.', s: 'The job shows the recommended team, why, the safety notes and the SLA. No crew is dispatched until you approve.', ms: 7000 },
+      L('NEXORA recommends. A person authorises.', 'Team, reason, safety notes and the SLA clock.',
+        'Now the decision. NEXORA recommends a team, explains why, and shows the safety notes and the SLA clock. But nothing is sent until a person approves.'),
     ],
-    waitNote: 'Waiting for you to press “Approve dispatch”…',
+    waitNote: 'Press “Approve dispatch” now.',
+    cue: 'CLICK “Approve dispatch” now',
     until: async () => {
       const jobs = await api('/work-orders?open_only=true')
       return jobs.some((w) => w.category === 'flood' && w.source === 'sensor' && w.approved_at)
     },
     timeoutMs: 0,
-    after: { t: 'Approved — the crew is assigned.', s: 'The approval is recorded in the job timeline with your name and the time.', ms: 5500 },
+    after: L('Approved. The crew is assigned.', 'Recorded with a name and the time.',
+      'I press approve. The crew is assigned, and the decision is recorded with my name and the time. The system itself refuses to dispatch without it.'),
   },
   {
     id: 'cost', kicker: 'Scene 7', title: 'What acting early is worth', page: 'roi',
-    spotlight: '[data-demo="cost-compare"]',
+    spotlight: '[data-demo="cost-compare"]', zoom: '[data-demo="cost-compare"]',
     lines: [
-      { t: 'Acting at Warning stage versus after the overflow.', s: 'Crew time, equipment and property damage — with the formula written out underneath.', ms: 7500 },
-      { t: 'These are scenario inputs, not verified savings.', s: 'Replace each assumption with the township’s own claims and call-out data; the figures update instantly.', ms: 7000 },
+      L('What is acting early worth?', 'Crew, equipment and property damage, with the formula shown.',
+        'What is acting early worth? Crew time, equipment, and property damage, with the formula written out, for acting at Warning stage versus after the overflow.'),
+      L('Scenario inputs, not verified savings.', 'Replace with the township’s own data.',
+        'These are scenario inputs, not verified savings. A township replaces each assumption with its own claims data, and the numbers update instantly.'),
     ],
   },
   {
     id: 'report', kicker: 'Scene 8', title: 'Evidence for climate adaptation', page: 'reports',
     lines: [
-      { t: 'Every event feeds a climate-resilience report.', s: 'Flood exposure, approval time, sensor availability and recoverable water — printable for the township office.', ms: 7000 },
+      L('Every event becomes evidence.', 'Flood exposure · approval time · sensor availability · recoverable water',
+        'Every event feeds a climate-resilience report: flood exposure, how fast a person approved, sensor availability, and water recovered. Evidence a township can show its residents and its owners.'),
     ],
   },
   {
     id: 'close', kicker: 'Scene 9', title: 'From detection to decision', page: 'overview',
     lines: [
-      { t: 'A frozen sensor, a flood alert and an approved dispatch — one chain.', s: 'Right now: the crew is assigned and the work is under way. NEXORA does not claim it is resolved until a crew says so.', ms: 7500 },
-      { t: 'NEXORA — From Detection to Decision.', s: '', ms: 5000 },
+      L('A frozen sensor, a flood alert, an approved dispatch.', 'One chain. Nothing is called resolved until a crew says so.',
+        'A frozen sensor, a flood alert, and an approved dispatch: one chain. And NEXORA does not claim anything is resolved until a crew says so.'),
     ],
+  },
+  {
+    id: 'outro', kicker: 'Closing', title: 'NEXORA', page: 'overview', card: 'outro',
+    lines: [{ t: 'NEXORA', s: 'From detection to decision.', vo: 'NEXORA. From detection to decision. Thank you.', ms: 7500 }],
   },
 ]

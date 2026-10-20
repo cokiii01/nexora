@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { usePoll } from '../lib/api'
 import { stageLabel } from '../lib/labels'
 import { DemoContext } from './context'
-import { SCENES } from './scenes'
+import { SCENES, LIVE_URL } from './scenes'
+import { LOGO_SRC } from '../lib/brand'
 import { useDirector } from './useDirector'
 
 function Spotlight({ selector }) {
@@ -47,6 +48,29 @@ function Scroller({ selector }) {
     return () => clearInterval(id)
   }, [selector])
   return null
+}
+
+// Gently zoom one element while its scene plays (adds/removes a class; pure CSS does the motion).
+function Zoom({ selector }) {
+  useEffect(() => {
+    let el = null
+    const t = setTimeout(() => { el = document.querySelector(selector); el?.classList.add('demo-zoomed') }, 1200)
+    return () => { clearTimeout(t); (el || document.querySelector(selector))?.classList.remove('demo-zoomed') }
+  }, [selector])
+  return null
+}
+
+// Full-screen opening / closing title card (the first and last seconds of the video).
+function FilmCard({ kind, line }) {
+  return (
+    <div className={`demo-film ${kind}`}>
+      <img src={LOGO_SRC} alt="" className="demo-film-logo" />
+      <h1>NEXORA</h1>
+      <p className="demo-film-tag">{line?.s}</p>
+      {kind === 'intro' && <p className="demo-film-sub">Planet track · Sime Darby Property University Hackathon 2026</p>}
+      {kind === 'outro' && <p className="demo-film-sub">{LIVE_URL}</p>}
+    </div>
+  )
 }
 
 function LiveChips() {
@@ -109,6 +133,16 @@ function ActiveDemo({ onNavigate, onExit, children }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [d])
 
+  // send the voice-over script to the presenter window (?prompter=1), if one is open
+  useEffect(() => {
+    try {
+      const bc = new BroadcastChannel('nexora-prompter')
+      bc.postMessage({ index: view.index, id: sc.id, title: sc.title, cue: sc.cue || '', waiting: view.waiting, line: view.line?.t || '',
+        script: [...sc.lines, ...(sc.after ? [sc.after] : [])].map((l) => ({ t: l.t, vo: l.vo || '' })), done: view.phase === 'done' })
+      bc.close()
+    } catch { /* BroadcastChannel not available */ }
+  }, [view, sc])
+
   const ctx = useMemo(() => ({ running: true, scene: sc.id, focusApproval: Boolean(sc.focusApproval) }), [sc])
   const done = view.phase === 'done'
 
@@ -118,10 +152,12 @@ function ActiveDemo({ onNavigate, onExit, children }) {
       <div className="demo-layer" data-paused={view.paused ? 'true' : undefined}>
         {!done && sc.spotlight && <Spotlight key={`spot-${sc.id}`} selector={sc.spotlight} />}
         {!done && sc.scroll && <Scroller key={`scroll-${sc.id}`} selector={sc.scroll} />}
-        {!done && <div key={`title-${sc.id}`} className="demo-title" aria-hidden="true"><span>{sc.kicker} / {SCENES.length}</span><h2>{sc.title}</h2></div>}
+        {!done && sc.zoom && <Zoom key={`zoom-${sc.id}`} selector={sc.zoom} />}
+        {!done && !sc.card && <div key={`title-${sc.id}`} className="demo-title" aria-hidden="true"><span>{sc.kicker}</span><h2>{sc.title}</h2></div>}
+        {!done && sc.card && <FilmCard key={`card-${sc.id}`} kind={sc.card} line={view.line} />}
         <div className="demo-vignette" aria-hidden="true" />
 
-        <section className={`demo-card${hidden ? ' is-hidden' : ''}`} aria-live="polite" aria-label="Guided demo">
+        <section className={`demo-card${hidden || (sc.card && !done) ? ' is-hidden' : ''}`} aria-live="polite" aria-label="Guided demo">
           {done ? (
             <>
               <span className="demo-kicker">DEMO COMPLETE</span>
