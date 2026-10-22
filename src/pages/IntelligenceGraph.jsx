@@ -700,7 +700,7 @@ function IntelligenceGraph() {
         <div ref={containerRef} className="ig-canvas" />
 
         <div className="ig-hint">
-          drag untuk putar · scroll untuk zoom · klik node untuk teroka
+          drag to rotate · scroll to zoom · click a node to explore
         </div>
 
         <div className="ig-legend">
