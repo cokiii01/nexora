@@ -48,7 +48,7 @@ NEXORA catches each one early, explains why it raised the alert, and turns it in
 4. Watch the 3D drains and pond fill and change colour. Open **Flood** to see the stages rise.
 5. Open **Work orders**. A flood job appears and waits in *Awaiting approval*. Press **Approve dispatch**, then start and resolve it.
 6. Open **Devices** to see sensor health, **Intelligence Graph** for the cause-and-effect chain, and **Reports** and **Business case** for the evidence and cost views.
-7. Press **Reset weather & burst** to stop the rain. Open jobs stay until a crew resolves them.
+7. Press **Reset scenarios** to stop the rain, remove the burst and close the jobs the scenarios opened.
 
 A **Pipe burst · Zone C** scenario is also there. After about 15 seconds the flow rule trips and a "Possible burst main" job appears under Work orders.
 
@@ -56,7 +56,7 @@ A **Pipe burst · Zone C** scenario is also there. After about 15 seconds the fl
 
 **Frontend**
 - React 19 with Vite 8 (single-page app)
-- Plain CSS design system (`src/nexora-v10.css`, `src/App.css`), no UI framework
+- Plain CSS design system (`src/nexora.css`, `src/App.css`), no UI framework
 - 3D Digital Twin: three.js with react-three-fiber and drei
 - Intelligence Graph: 3d-force-graph
 - Resident Connect: installable PWA (service worker and web manifest)

@@ -541,16 +541,24 @@ def reset_demo(actor):
     for did in list(state["fault_reason"]):
         _clear_fault(did)
     state["recent"].clear()
+    # remove a simulated burst; a seeded hidden leak (if the deployment has one) stays
+    for zone in list(state["leak"]):
+        state["leak"][zone] = config.SEED_HIDDEN_LEAK_M3H if zone == "Zone C" else 0.0
+    state["leak_counter"].clear()
+    db.set_setting("sim_leak", json.dumps(state["leak"]))
+    cats = ("flood", "sensor_fault") if config.SEED_HIDDEN_LEAK_M3H > 0 else ("flood", "sensor_fault", "water_leak")
+    marks = ",".join("?" * len(cats))
     closed = 0
     with db.tx() as c:
-        for w in c.execute("SELECT id FROM work_orders WHERE source='sensor' AND category IN ('flood','sensor_fault') "
-                           "AND status NOT IN ('RESOLVED','CLOSED')").fetchall():
+        for w in c.execute("SELECT id FROM work_orders WHERE source='sensor' AND category IN (" + marks + ") "
+                           "AND status NOT IN ('RESOLVED','CLOSED')", cats).fetchall():
             c.execute("UPDATE work_orders SET status='CLOSED', resolved_at=?, updated_at=?, "
                       "approval=CASE WHEN approval='pending' THEN 'cancelled' ELSE approval END WHERE id=?", (now, now, w["id"]))
             c.execute("INSERT INTO wo_events(wo_id,ts,status,note,actor) VALUES(?,?,?,?,?)",
                       (w["id"], now, "CLOSED", "Closed by demo reset", actor))
             closed += 1
-        c.execute("UPDATE alerts SET cleared_at=? WHERE kind IN ('flood','sensor_fault') AND cleared_at IS NULL", (now,))
+        kinds = ("flood", "sensor_fault") if config.SEED_HIDDEN_LEAK_M3H > 0 else ("flood", "sensor_fault", "leak")
+        c.execute("UPDATE alerts SET cleared_at=? WHERE kind IN (" + ",".join("?" * len(kinds)) + ") AND cleared_at IS NULL", (now, *kinds))
         # calm water levels and rain straight away instead of waiting for them to recede
         for d in c.execute("SELECT device_id,kind,meta FROM devices WHERE kind IN ('level','rain')").fetchall():
             if d["kind"] == "rain":

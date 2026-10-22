@@ -45,12 +45,10 @@ function LiveScenarioBar({ onRun }) {
   const reset = async () => {
     setBusy('reset')
     try {
-      await api('/sim/rain', { method: 'POST', body: { mm_per_h: 0 } })
-      let base = 0
-      try { base = Number(sessionStorage.getItem('nexora.baseLeakC') || 0) } catch { base = 0 }
-      await api('/sim/leak', { method: 'POST', body: { zone: 'Zone C', m3h: base } })
+      await api('/sim/reset', { method: 'POST' })
       setActive('')
-      setMsg('Rain stopped and the Zone C burst removed (any earlier hidden leak stays until its job is resolved). Levels recede over ~1 minute; open jobs stay until a crew resolves them.')
+      onRun?.()
+      setMsg('Back to calm: rain off, burst removed, and the jobs these scenarios opened are closed with a note. Resident reports are untouched.')
     } catch (e) { setMsg(e.message) } finally { setBusy('') }
   }
 
@@ -75,7 +73,7 @@ function LiveScenarioBar({ onRun }) {
             {busy === sc.key ? 'Starting…' : sc.label}
           </button>
         ))}
-        <button type="button" disabled={!!busy} onClick={reset}>Reset weather & burst</button>
+        <button type="button" disabled={!!busy} onClick={reset}>Reset scenarios</button>
       </div>
       {msg && <p className="dt-live-msg">{msg}</p>}
       {summary.error && !s && <p className="dt-live-msg">Live scenarios need the backend (/api/v2) running.</p>}

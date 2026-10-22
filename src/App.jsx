@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import './nexora-v10.css'
+import './nexora.css'
 
 import CommandNav from './components/CommandNav'
 import CommandTopbar from './components/CommandTopbar'
