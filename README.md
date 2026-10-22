@@ -3,7 +3,7 @@
 **Township water that watches itself, with a person still in charge.**
 
 Planet track · Sime Darby Property University Hackathon 2026 · *Township of Tomorrow*  
-Team: Shauqi, Amir, Zaim
+
 
 | | |
 |---|---|
