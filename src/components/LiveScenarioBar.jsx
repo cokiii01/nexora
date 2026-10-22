@@ -23,6 +23,7 @@ function LiveScenarioBar({ onRun }) {
   const summary = usePoll('/summary', 3000)
   const [busy, setBusy] = useState('')
   const [msg, setMsg] = useState('')
+  const [active, setActive] = useState('') // last scenario started, shown highlighted
   const s = summary.data
 
   const run = async (sc) => {
@@ -30,6 +31,7 @@ function LiveScenarioBar({ onRun }) {
     setMsg('')
     try {
       await sc.run()
+      setActive(sc.key)
       onRun?.()
       setMsg(sc.key === 'burst'
         ? 'Burst injected. After ~5 readings the flow rule trips: alert + work order, and Zone C pulses in 3D.'
@@ -48,6 +50,7 @@ function LiveScenarioBar({ onRun }) {
       let base = 0
       try { base = Number(sessionStorage.getItem('nexora.baseLeakC') || 0) } catch { base = 0 }
       await api('/sim/leak', { method: 'POST', body: { zone: 'Zone C', m3h: base } })
+      setActive('')
       setMsg('Rain stopped and the Zone C burst removed (any earlier hidden leak stays until its job is resolved). Levels recede over ~1 minute; open jobs stay until a crew resolves them.')
     } catch (e) { setMsg(e.message) } finally { setBusy('') }
   }
@@ -69,7 +72,7 @@ function LiveScenarioBar({ onRun }) {
       </div>
       <div className="dt-live-actions">
         {SCENARIOS.map((sc) => (
-          <button key={sc.key} type="button" className={sc.key === 'storm' ? 'primary' : ''} disabled={!!busy} onClick={() => run(sc)} title={sc.hint}>
+          <button key={sc.key} type="button" className={sc.key === active ? 'primary' : ''} disabled={!!busy} onClick={() => run(sc)} title={sc.hint}>
             {busy === sc.key ? 'Starting…' : sc.label}
           </button>
         ))}
