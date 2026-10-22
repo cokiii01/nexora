@@ -1,8 +1,7 @@
 import { stageLabel } from '../lib/labels'
 import { LOGO_SRC } from '../lib/brand'
 
-// NEXORA V10 — sidebar command navigation (CRM-style shell).
-// Original page keys are preserved; new township modules are added above them.
+// Page keys used by the sidebar.
 
 const Icon = ({ d, children }) => (
   <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

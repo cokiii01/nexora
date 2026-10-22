@@ -16,21 +16,6 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 
 from fastapi.middleware.cors import CORSMiddleware
 
-# =========================================================
-
-# NEXORA
-
-# REAL-TIME DATA GATEWAY
-
-# PREDICTIVE MAINTENANCE
-
-# GENERATIVE WORK ORDER + AUTO-DISPATCH
-
-# AGENTIC AI ORCHESTRATION
-
-# ENTERPRISE IOT DATA PIPELINE
-
-# =========================================================
 
 app = FastAPI(
 
@@ -40,11 +25,6 @@ app = FastAPI(
 
 )
 
-# =========================================================
-
-# CORS
-
-# =========================================================
 
 app.add_middleware(
 
@@ -73,11 +53,6 @@ app.add_middleware(
 
 )
 
-# =========================================================
-
-# LOAD ML MODEL
-
-# =========================================================
 
 BASE_DIR = os.path.dirname(
 
@@ -231,11 +206,6 @@ print("=" * 70)
 
 print()
 
-# =========================================================
-
-# SENSOR STATE
-
-# =========================================================
 
 sensor_state = {
 
@@ -296,11 +266,6 @@ sensor_state = {
 
 }
 
-# =========================================================
-
-# ENTERPRISE IOT DATA PIPELINE STATE
-
-# =========================================================
 
 IOT_DEVICES = {
 
@@ -342,11 +307,6 @@ IOT_PIPELINE_ARCHITECTURE = {
 
 }
 
-# =========================================================
-
-# RESPONSE TEAMS
-
-# =========================================================
 
 response_teams = [
 
@@ -442,21 +402,11 @@ response_teams = [
 
 ]
 
-# =========================================================
-
-# WORK ORDER STATE
-
-# =========================================================
 
 work_orders = {}
 
 work_order_counter = 1
 
-# =========================================================
-
-# AGENTIC AI STATE
-
-# =========================================================
 
 agent_trace = []
 
@@ -506,11 +456,6 @@ AGENT_CONFIG = {
 
 }
 
-# =========================================================
-
-# WEBSOCKET CONNECTION MANAGER
-
-# =========================================================
 
 class ConnectionManager:
 
@@ -606,11 +551,6 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
-# =========================================================
-
-# ENTERPRISE IOT PIPELINE HELPERS
-
-# =========================================================
 
 def _iot_recent_rate():
 
@@ -768,11 +708,6 @@ async def run_iot_pipeline():
 
         await asyncio.sleep(0.8)
 
-# =========================================================
-
-# AGENTIC AI TRACE HELPERS
-
-# =========================================================
 
 def create_agent_trace(
 
@@ -858,11 +793,6 @@ async def broadcast_agent_trace(
 
     return trace
 
-# =========================================================
-
-# PREDICTIVE MAINTENANCE ENGINE
-
-# =========================================================
 
 def calculate_failure_risk(
 
@@ -1052,11 +982,6 @@ def build_predictive_analysis(
 
     }
 
-# =========================================================
-
-# AUTO-DISPATCH RECOMMENDER
-
-# =========================================================
 
 def select_response_team(
 
@@ -1078,11 +1003,6 @@ def select_response_team(
 
         reasons = []
 
-        # ---------------------------------------------
-
-        # SPECIALISATION
-
-        # ---------------------------------------------
 
         if (
 
@@ -1124,11 +1044,6 @@ def select_response_team(
 
             )
 
-        # ---------------------------------------------
-
-        # ZONE
-
-        # ---------------------------------------------
 
         if (
 
@@ -1162,11 +1077,6 @@ def select_response_team(
 
             )
 
-        # ---------------------------------------------
-
-        # AVAILABILITY
-
-        # ---------------------------------------------
 
         if (
 
@@ -1194,11 +1104,6 @@ def select_response_team(
 
             )
 
-        # ---------------------------------------------
-
-        # WORKLOAD
-
-        # ---------------------------------------------
 
         workload_penalty = (
 
@@ -1264,11 +1169,6 @@ def select_response_team(
 
     )
 
-# =========================================================
-
-# GENERATIVE WORK ORDER ENGINE
-
-# =========================================================
 
 def generate_work_order(
 
@@ -1280,11 +1180,6 @@ def generate_work_order(
 
     global work_order_counter
 
-    # ---------------------------------------------
-
-    # PREVENT DUPLICATE ACTIVE WORK ORDER
-
-    # ---------------------------------------------
 
     for work_order in (
 
@@ -1316,11 +1211,6 @@ def generate_work_order(
 
             return work_order
 
-    # ---------------------------------------------
-
-    # SELECT TEAM
-
-    # ---------------------------------------------
 
     selected_team, ranking = (
 
@@ -1338,11 +1228,6 @@ def generate_work_order(
 
     )
 
-    # ---------------------------------------------
-
-    # GENERATE ID
-
-    # ---------------------------------------------
 
     work_order_id = (
 
@@ -1354,11 +1239,6 @@ def generate_work_order(
 
     work_order_counter += 1
 
-    # ---------------------------------------------
-
-    # GENERATE WORK ORDER
-
-    # ---------------------------------------------
 
     work_order = {
 
@@ -1434,11 +1314,6 @@ def generate_work_order(
 
             ],
 
-        # -----------------------------------------
-
-        # GENERATIVE TASK SCOPE
-
-        # -----------------------------------------
 
         "generated_scope": [
 
@@ -1476,11 +1351,6 @@ def generate_work_order(
 
         ],
 
-        # -----------------------------------------
-
-        # SAFETY
-
-        # -----------------------------------------
 
         "safety_notes": [
 
@@ -1498,11 +1368,6 @@ def generate_work_order(
 
         ],
 
-        # -----------------------------------------
-
-        # TELEMETRY SNAPSHOT
-
-        # -----------------------------------------
 
         "telemetry_snapshot": {
 
@@ -1552,11 +1417,6 @@ def generate_work_order(
 
         },
 
-        # -----------------------------------------
-
-        # TEAM RECOMMENDATION
-
-        # -----------------------------------------
 
         "recommended_team": {
 
@@ -1602,11 +1462,6 @@ def generate_work_order(
 
         },
 
-        # -----------------------------------------
-
-        # RANKING
-
-        # -----------------------------------------
 
         "team_ranking": [
 
@@ -1646,11 +1501,6 @@ def generate_work_order(
 
         ],
 
-        # -----------------------------------------
-
-        # GOVERNANCE
-
-        # -----------------------------------------
 
         "human_approval_required":
 
@@ -1682,11 +1532,6 @@ def generate_work_order(
 
     return work_order
 
-# =========================================================
-
-# ROOT
-
-# =========================================================
 
 @app.get("/")
 
@@ -1768,11 +1613,6 @@ async def root():
 
     }
 
-# =========================================================
-
-# HEALTH
-
-# =========================================================
 
 @app.get("/api/health")
 
@@ -1834,11 +1674,6 @@ async def health():
 
     }
 
-# =========================================================
-
-# MODEL INFO
-
-# =========================================================
 
 @app.get("/api/model")
 
@@ -1884,11 +1719,6 @@ async def model_information():
 
     }
 
-# =========================================================
-
-# SENSOR API
-
-# =========================================================
 
 @app.get("/api/sensors")
 
@@ -1896,11 +1726,6 @@ async def get_sensors():
 
     return sensor_state
 
-# =========================================================
-
-# TEAM API
-
-# =========================================================
 
 @app.get("/api/teams")
 
@@ -1922,11 +1747,6 @@ async def get_teams():
 
     }
 
-# =========================================================
-
-# AGENTIC AI API
-
-# =========================================================
 
 @app.get("/api/agents")
 
@@ -1984,11 +1804,6 @@ async def clear_agent_trace():
 
     }
 
-# =========================================================
-
-# ENTERPRISE IOT DATA PIPELINE API
-
-# =========================================================
 
 @app.get("/api/iot/pipeline")
 
@@ -2068,11 +1883,6 @@ async def publish_virtual_iot_reading(device_id: str):
 
     return {"message":"Virtual IoT reading published","event":event}
 
-# =========================================================
-
-# PREDICTION API
-
-# =========================================================
 
 @app.get("/api/predict/WT-04")
 
@@ -2182,11 +1992,6 @@ async def predict_wt04():
 
     }
 
-# =========================================================
-
-# WORK ORDER API
-
-# =========================================================
 
 @app.get("/api/work-orders")
 
@@ -2246,11 +2051,6 @@ async def get_work_order(
 
     return work_order
 
-# =========================================================
-
-# APPROVE WORK ORDER
-
-# =========================================================
 
 @app.post(
 
@@ -2372,11 +2172,6 @@ async def approve_work_order(
 
     return work_order
 
-# =========================================================
-
-# DISPATCH WORK ORDER
-
-# =========================================================
 
 @app.post(
 
@@ -2528,11 +2323,6 @@ async def dispatch_work_order(
 
     return work_order
 
-# =========================================================
-
-# APPROVE + DISPATCH IN ONE ACTION
-
-# =========================================================
 
 @app.post(
 
@@ -2594,11 +2384,6 @@ async def approve_and_dispatch(
 
         }
 
-    # ---------------------------------------------
-
-    # HUMAN APPROVAL
-
-    # ---------------------------------------------
 
     now = datetime.now().isoformat()
 
@@ -2626,11 +2411,6 @@ async def approve_and_dispatch(
 
     )
 
-    # ---------------------------------------------
-
-    # UPDATE TEAM
-
-    # ---------------------------------------------
 
     selected_team_id = (
 
@@ -2666,11 +2446,6 @@ async def approve_and_dispatch(
 
             break
 
-    # ---------------------------------------------
-
-    # BROADCAST
-
-    # ---------------------------------------------
 
     event = {
 
@@ -2736,11 +2511,6 @@ async def approve_and_dispatch(
 
     return work_order
 
-# =========================================================
-
-# WATER FAILURE SIMULATION
-
-# =========================================================
 
 @app.post(
 
@@ -2950,13 +2720,9 @@ async def simulate_water_failure():
 
             ]
 
-            # =========================================
-
-            # ENTERPRISE IOT INGESTION
 
             # DEVICE -> MQTT -> EVENT BUS -> GATEWAY
 
-            # =========================================
 
             await publish_iot_event(
 
@@ -2966,11 +2732,6 @@ async def simulate_water_failure():
 
             )
 
-            # =========================================
-
-            # ML INFERENCE
-
-            # =========================================
 
             analysis = (
 
@@ -2982,11 +2743,6 @@ async def simulate_water_failure():
 
             )
 
-            # =========================================
-
-            # SENSOR UPDATE
-
-            # =========================================
 
             sensor_event = {
 
@@ -3028,11 +2784,6 @@ async def simulate_water_failure():
 
             )
 
-            # =========================================
-
-            # PREDICTIVE EVENT
-
-            # =========================================
 
             predictive_event = {
 
@@ -3154,11 +2905,6 @@ async def simulate_water_failure():
 
             )
 
-        # =============================================
-
-        # FINAL CRITICAL STATE
-
-        # =============================================
 
         sensor = sensor_state[
 
@@ -3176,11 +2922,6 @@ async def simulate_water_failure():
 
         )
 
-        # =============================================
-
-        # ANOMALY EVENT
-
-        # =============================================
 
         anomaly_event = {
 
@@ -3384,11 +3125,6 @@ async def simulate_water_failure():
 
         )
 
-        # =============================================
-
-        # GENERATE WORK ORDER FROM ML RISK
-
-        # =============================================
 
         if (
 
@@ -3530,15 +3266,6 @@ async def simulate_water_failure():
 
     }
 
-# =========================================================
-
-# RESET SIMULATION
-
-# =========================================================
-
-# =========================================================
-# TRAFFIC SURGE SCENARIO
-# =========================================================
 
 @app.post("/api/simulate/traffic-surge")
 async def simulate_traffic_surge():
@@ -3589,10 +3316,6 @@ async def simulate_traffic_surge():
     asyncio.create_task(run_simulation())
     return {"message": "Traffic surge scenario started", "sensor_id": "TR-08", "zone": "Zone B"}
 
-
-# =========================================================
-# POWER GRID OVERLOAD SCENARIO
-# =========================================================
 
 @app.post("/api/simulate/power-overload")
 async def simulate_power_overload():
@@ -3670,11 +3393,6 @@ async def reset_simulation():
 
     global iot_event_counter
 
-    # ---------------------------------------------
-
-    # RESET SENSOR
-
-    # ---------------------------------------------
 
     sensor_state["WT-04"] = {
 
@@ -3724,11 +3442,6 @@ async def reset_simulation():
 
     }
 
-    # ---------------------------------------------
-
-    # RESET WORK ORDERS
-
-    # ---------------------------------------------
 
     work_orders.clear()
 
@@ -3742,11 +3455,6 @@ async def reset_simulation():
 
     iot_event_counter = 1
 
-    # ---------------------------------------------
-
-    # RESET TEAMS
-
-    # ---------------------------------------------
 
     for team in response_teams:
 
@@ -3848,11 +3556,6 @@ async def reset_simulation():
 
     }
 
-# =========================================================
-
-# RANDOM IOT EVENT
-
-# =========================================================
 
 @app.post(
 
@@ -4074,11 +3777,6 @@ async def random_event():
 
     }
 
-# =========================================================
-
-# WEBSOCKET
-
-# =========================================================
 
 @app.websocket("/ws")
 
@@ -4167,11 +3865,9 @@ async def websocket_endpoint(
         )
 
 
-# =========================================================
 # TOWNSHIP SERVICES v2 — water (night-flow leak detection),
 # flood alerts, waste routing, work orders + SLA, reports.
 # Real ESP32 sensors and the simulator share /api/v2/ingest.
-# =========================================================
 
 from township import api as township_api  # noqa: E402
 from township import engine as township_engine  # noqa: E402

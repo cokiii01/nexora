@@ -1,11 +1,4 @@
-/* =============================================================================
-   NEXORA V10 — CRM DARK DASHBOARD
-   Reference: dark CRM home dashboard (black sidebar, charcoal canvas, flat
-   graphite cards, mint + lavender pill bars, staggered load-in + count-up).
-   Loaded after App.css. Scoped to .cx-shell so landing / resident stay as-is.
-   Semantic status colours (green / amber / red) keep their meaning.
-   ========================================================================== */
-
+/* Command Centre styles. Scoped to .cx-shell; loaded after App.css. */
 
 .cx-shell {
   --k-side: #0a0a0b;
@@ -53,7 +46,7 @@
 }
 .cx-shell .mono { font-family: var(--mono); }
 
-/* ---------------------------------------------------------------- sidebar */
+/* sidebar */
 .cx-sidebar {
   position: sticky; top: 0; height: 100vh;
   display: flex; flex-direction: column;
@@ -135,7 +128,7 @@
 .cx-user-copy small { display: block; color: var(--k-muted); font-size: 11px; }
 .cx-live-chip { padding: 3px 8px; border-radius: 6px; background: var(--k-brand); color: #fff; font-size: 10.5px; font-weight: 600; }
 
-/* ------------------------------------------------------------- main panel */
+/* main panel */
 .cx-main {
   min-width: 0;
   margin: 8px 8px 8px 0;
@@ -181,7 +174,7 @@
 
 .cx-canvas { padding: 18px 20px 72px; min-width: 0; }
 
-/* =============================================================== OVERVIEW */
+/* OVERVIEW */
 .ov { display: flex; flex-direction: column; gap: 12px; }
 .ov-grid { display: grid; gap: 12px; }
 .ov-grid-main { grid-template-columns: minmax(0, 1.75fr) minmax(300px, 1fr); }
@@ -402,7 +395,7 @@
 .ov-env-grid small { color: var(--k-mint); font-size: 11px; font-weight: 500; }
 .ov-env-grid .warn { color: var(--k-amber); }
 
-/* ==================================================== OTHER MODULE PAGES */
+/* OTHER MODULE PAGES */
 /* Pages keep their markup + logic; they just sit on the new canvas. */
 .cx-shell .cx-canvas > :is(.digital-twin-page, .operations-page, .sustainability-page) {
   min-height: 0; padding: 0; background: transparent !important; color: var(--k-ink); font-family: var(--k-sans);
@@ -441,7 +434,7 @@
 .cx-shell .cx-canvas .environment-alert { border-left-color: var(--k-amber) !important; }
 .cx-shell .cx-canvas :is(.operation-stat, .sustainability-stat, .stat-card) strong { letter-spacing: -.025em; }
 
-/* Bars + accents → reference lavender / mint */
+/* Bars and accents */
 .cx-shell .cx-canvas .chart-bars > div { background: var(--k-violet); border-radius: 4px 4px 2px 2px; transform-origin: bottom; animation: cx-grow-y .9s var(--k-ease) both; }
 .cx-shell .cx-canvas .chart-bars > div:nth-child(n) { animation-delay: calc(.35s + var(--bar-i, 0) * 40ms); }
 .cx-shell .cx-canvas .chart-bars > div:hover { background: var(--k-lilac); }
@@ -462,7 +455,7 @@
 .cx-shell .cx-canvas .dt-heading-clean .dt-view-switch > button { border-radius: 7px; }
 .cx-shell .cx-canvas .dt-heading-clean .dt-view-switch > button.active { background: var(--k-card-2); color: #fff; box-shadow: inset 0 0 0 1px var(--k-line-2); }
 
-/* Pills: tighter, reference-style rounded rectangles */
+/* Pills */
 .cx-shell .cx-canvas :is(.severity, .zone-status, .environment-alert-level, .nwo-priority, .nwo-status, .dt-sync,
   .operations-live, .sustainability-live, .incident-count, .agent-trace-badge, .agent-run-id) { border-radius: 6px; }
 
@@ -478,7 +471,7 @@
 .cx-shell .nexora-ai-trigger { border-radius: 10px !important; background: var(--k-card) !important; border: 1px solid var(--k-line-2) !important; box-shadow: 0 12px 40px rgba(0,0,0,.5) !important; }
 .cx-shell .nexora-ai-trigger:hover { background: var(--k-card-2) !important; }
 
-/* ================================================================ motion */
+/* motion */
 @keyframes cx-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes cx-fade-row { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
 @keyframes cx-grow-x { from { transform: scaleX(0); } to { transform: none; } }
@@ -494,7 +487,7 @@
   .ov-spark polyline { stroke-dashoffset: 0; }
 }
 
-/* ============================================================ responsive */
+/* responsive */
 @media (max-width: 1240px) {
   .ov-grid-main { grid-template-columns: minmax(0, 1fr); }
   .ov-tr { grid-template-columns: minmax(170px, 1.3fr) 64px 86px minmax(120px, 1.4fr) 92px; }
@@ -533,7 +526,7 @@
   .ov-meta { grid-template-columns: 1fr 1fr 1fr; }
 }
 
-/* ---- module polish: sentence-case KPI labels, dashboard number scale ---- */
+/* module polish: sentence-case KPI labels, dashboard number scale */
 .cx-shell .cx-canvas :is(.operation-stat, .sustainability-stat) > span:first-child {
   display: block; text-transform: lowercase; letter-spacing: 0 !important; font-size: 12px !important; font-weight: 500; color: var(--k-muted) !important;
 }
@@ -571,9 +564,7 @@
 .ov-zone-grid dd.warn { color: var(--k-amber); }
 @media (max-width: 640px) { .ov-zone-grid { grid-template-columns: 1fr; } }
 
-/* =============================================================================
-   V11 — TOWNSHIP MODULES (water · flood · waste · work orders · devices · reports · ROI · resident app)
-   ========================================================================== */
+/* Township modules */
 .cx-shell button, .cx-shell input, .cx-shell select, .cx-shell textarea { font-family: inherit; }
 .cx-shell code { font-family: var(--mono); font-size: .92em; padding: 1px 5px; border-radius: 4px; background: var(--k-card-2); color: var(--k-ink-2); }
 .cx-nav-group { display: flex; flex-direction: column; gap: 1px; }
@@ -797,7 +788,7 @@ button.ov-tr.selected { background: rgba(169,156,245,.07); }
 .roi-mint { background: var(--k-mint) !important; } .roi-violet { background: var(--k-violet) !important; } .roi-lilac { background: var(--k-lilac) !important; } .roi-blue { background: var(--k-blue) !important; }
 .roi-impact { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--k-line); grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
-/* ---------------------------------------------------------- resident app */
+/* resident app */
 .cx-shell.ra { display: flex; flex-direction: column; min-height: 100vh; background: var(--k-bg) !important; }
 .ra-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--k-line); background: rgba(22,22,24,.9); backdrop-filter: blur(12px); }
 .ra-brand { width: auto; margin: 0; }
@@ -880,7 +871,7 @@ button.ov-tr.selected { background: rgba(169,156,245,.07); }
   .ra-cats { grid-template-columns: repeat(4, 1fr); }
 }
 
-/* ---- 3D twin: live water + flood overlay ---- */
+/* 3D twin: live water + flood overlay */
 .township-3d-live { position: absolute; z-index: 21; top: 64px; left: 14px; display: flex; flex-wrap: wrap; gap: 6px; pointer-events: none; }
 .t3d-chip { padding: 5px 10px; border-radius: 7px; border: 1px solid rgba(255,255,255,.12); background: rgba(12,12,16,.88); color: #e6e6ea; font: 600 11px/1.2 var(--k-sans, Inter, sans-serif); }
 .t3d-chip.ok { color: #8fe0b8; } .t3d-chip.leak { color: #ff8fbf; border-color: rgba(255,92,154,.5); }
@@ -897,7 +888,7 @@ button.ov-tr.selected { background: rgba(169,156,245,.07); }
 .t3d-badge.stage-BAHAYA { border-color: #ef4444; background: rgba(80,10,16,.92); } .t3d-badge.stage-BAHAYA strong { color: #fff; }
 .township-3d-legend i.t3d-leg-leak { background: #ff5c9a; } .township-3d-legend i.t3d-leg-water { background: #4f8cff; }
 
-/* ---- Digital Twin: live scenario bar ---- */
+/* Digital Twin: live scenario bar */
 .dt-live-bar { margin: 0 0 16px; padding: 14px 16px; border: 1px solid rgba(169,156,245,.3); border-radius: 12px; background: linear-gradient(180deg, rgba(124,108,240,.08), var(--k-card, #1e1e21)); animation: cx-rise .5s var(--k-ease, ease) both; }
 .dt-live-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
 .dt-live-kicker { display: block; color: var(--k-violet, #a99cf5); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; }
@@ -910,9 +901,8 @@ button.ov-tr.selected { background: rgba(169,156,245,.07); }
 .dt-live-actions button:disabled { opacity: .5; cursor: wait; }
 .dt-live-msg { margin: 10px 0 0; color: var(--k-muted, #8a8a93); font-size: 12px; line-height: 1.5; }
 
-/* ===================================================================== */
-/*  v17 — sensor health · dispatch approval · cost of waiting · guided demo */
-/* ===================================================================== */
+/* Sensor health, dispatch approval, cost of waiting */
+
 .dv-dot.fault { background: var(--k-red); box-shadow: 0 0 0 3px rgba(245,139,139,.18); animation: cx-pulse 1.2s ease-in-out infinite; }
 .dv-faulty { background: rgba(245,139,139,.05); }
 .dv-faulty .ov-why { color: var(--k-red); white-space: normal; line-height: 1.35; }
@@ -951,13 +941,13 @@ button.ov-tr.selected { background: rgba(169,156,245,.07); }
 .fc-form { margin-top: 12px; grid-template-columns: 1fr; } .fc-form fieldset { max-width: 460px; }
 @media (max-width: 860px) { .fc-card .fc-grid { grid-template-columns: 1fr; } }
 
-/* ---- landing button ---- */
+/* landing button */
 .nexora-v4 .demo-entry-btn { background: rgba(124,108,240,.30) !important; border: 1px solid rgba(167,139,250,.85) !important; color: #fff !important; backdrop-filter: blur(8px); cursor: pointer; }
 .nexora-v4 .demo-entry-btn:hover { transform: translateY(-2px); background: rgba(124,108,240,.5) !important; }
 .nexora-v4 .demo-entry-btn:disabled { opacity: .6; cursor: wait; transform: none; }
 .landing-demo-error { margin: 14px auto 0; max-width: 520px; color: #ffb4b4; font-size: 12px; text-align: center; text-shadow: 0 1px 8px rgba(0,0,0,.6); }
 
-/* ---- guided demo overlay ---- */
+/* guided demo overlay */
 .demo-layer { position: fixed; inset: 0; z-index: 900; pointer-events: none; font-family: var(--k-sans); color: var(--k-ink); }
 .demo-vignette { position: absolute; left: 0; right: 0; bottom: 0; height: 280px; background: linear-gradient(to top, rgba(6,6,9,.8), transparent); }
 .demo-spot { position: fixed; border-radius: 12px; box-shadow: 0 0 0 100vmax rgba(5,6,10,.52), 0 0 0 2px rgba(169,156,245,.95), 0 0 30px rgba(169,156,245,.5); transition: left .35s var(--k-ease), top .35s var(--k-ease), width .35s var(--k-ease), height .35s var(--k-ease); animation: demo-ring 2.2s ease-in-out infinite; }
@@ -1001,7 +991,7 @@ button.ov-tr.selected { background: rgba(169,156,245,.07); }
 @media (prefers-reduced-motion: reduce) { .demo-title { display: none; } .demo-spot, .demo-timeline i, .demo-wait i, .fc-seg { animation: none; transition: none; } }
 .township-3d-shell { scroll-margin-top: 64px; }
 
-/* ---- v18: roadmap + story strip + resilience report ---- */
+/* Roadmap, story strip, resilience report */
 .rm-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .rm-list li{display:grid;gap:2px}
 .rm-list b{font-weight:600;color:var(--k-text,#e8ecf4)}
@@ -1022,13 +1012,13 @@ button.ov-tr.selected { background: rgba(169,156,245,.07); }
 .tc-list{margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--k-muted,#8a93a6);line-height:1.6}
 @media (max-width:820px){.story-strip,.rs-grid{grid-template-columns:1fr}}
 
-/* ---- v21: brand logo image, cleaner landing ---- */
+/* Logo and landing */
 .cx-logo { background: transparent; }
 .cx-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .nexora-v4 .landing-mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .nexora-v4 .landing-nav::after { display: none; }
 
-/* ---- v23: intro splash (logo spins, then the page opens) ---- */
+/* Intro splash */
 .nx-intro { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; background: #050507; cursor: pointer; transition: opacity .55s ease, visibility .55s ease; }
 .nx-intro.leaving { opacity: 0; visibility: hidden; }
 .nx-intro-stage { display: flex; flex-direction: column; align-items: center; gap: 18px; perspective: 900px; }
@@ -1039,14 +1029,16 @@ button.ov-tr.selected { background: rgba(169,156,245,.07); }
 .nx-intro-skip { position: absolute; bottom: 28px; color: rgba(255,255,255,.3); font: 500 12px/1 var(--sans, Inter, system-ui, sans-serif); }
 @keyframes nx-spin { 0% { transform: rotateY(0deg) scale(.55); opacity: 0; } 18% { opacity: 1; } 100% { transform: rotateY(720deg) scale(1); opacity: 1; } }
 @keyframes nx-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-/* v26 — tighter demo caption card so it covers less of the screen on laptops; H hides it */
+
+/* Demo caption card */
 .demo-card { bottom: 14px; width: min(600px, calc(100vw - 32px)); gap: 5px; padding: 11px 15px 8px; }
 .demo-card h3 { font-size: 16px; line-height: 1.25; }
 .demo-card p { font-size: 12px; line-height: 1.45; }
 .demo-ico { width: 30px; height: 30px; } .demo-ico.big { width: 34px; height: 34px; }
 .demo-card.is-hidden { opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(12px); transition: opacity .2s, transform .2s; }
 @media (max-height: 900px) { .demo-chips { display: none; } }
-/* v27 — cinematic demo: title cards, zoom, prompter */
+
+/* Demo title cards and prompter */
 .demo-film { position: fixed; inset: 0; z-index: 9000; display: grid; place-content: center; justify-items: center; gap: 14px; text-align: center;
   background: radial-gradient(ellipse at 50% 40%, #0d2a3a 0%, #06121c 70%); color: #eaf7fa; animation: demo-film-in 1s ease both; }
 .demo-film.outro { animation: demo-film-in 1.4s ease both; }

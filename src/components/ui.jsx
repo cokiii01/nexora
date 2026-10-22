@@ -1,4 +1,4 @@
-// Shared building blocks for the V10 module pages.
+// Shared building blocks for the module pages.
 import { BACKEND_LABEL } from '../lib/api'
 import { stageLabel } from '../lib/labels'
 

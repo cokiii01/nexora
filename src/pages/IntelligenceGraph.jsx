@@ -4,9 +4,6 @@ import * as THREE from 'three'
 import { usePoll } from '../lib/api'
 import { stageLabel } from '../lib/labels'
 
-/* ------------------------------------------------------------------ */
-/*  PALETTE  (kuning = benda utama di ring, pink = sensor/data/dll)   */
-/* ------------------------------------------------------------------ */
 const COLORS = {
   core: '#ff9a3c',
   zone: '#ffd84d',
@@ -24,7 +21,6 @@ const HOT = '#ff4d5e'
 
 const FONT = '"JetBrains Mono", "SF Mono", Menlo, Consolas, monospace'
 
-/* node yang duduk atas ring (orbit) – ikut susunan supaya yang berkait dekat-dekat */
 const STATIC_RING = [
   'ZONE A', 'INC-0038', 'Road Team 01', 'Predictive AI', 'Operations Centre',
   'Agentic AI', 'Electrical Team 03', 'INC-0036', 'ZONE C', 'INC-0041',
@@ -166,15 +162,11 @@ const STATIC_GRAPH = {
   ],
 }
 
-// water-only: drop the legacy energy / traffic / streetlight items from the offline fallback graph
 const LEGACY = new Set(['EN-12', 'TR-08', 'SL-204', 'WT-03', 'Substation A', 'Junction B', 'Streetlight Grid', 'Traffic Alert B', 'Road Team 01', 'Electrical Team 03', 'INC-0038', 'INC-0036'])
 STATIC_GRAPH.nodes = STATIC_GRAPH.nodes.filter((x) => !LEGACY.has(x.id))
 STATIC_GRAPH.links = STATIC_GRAPH.links.filter((x) => !LEGACY.has(x.source) && !LEGACY.has(x.target))
 STATIC_GRAPH.nodes.forEach((node) => { node.ring = STATIC_RING.includes(node.id) })
 
-/* ------------------------------------------------------------------ */
-/*  LIVE GRAPH — built from /api/v2 (devices, alerts, jobs, water)     */
-/* ------------------------------------------------------------------ */
 const INFRA_FOR = {
   'FM-A': 'Water main A', 'FM-B': 'Water main B', 'FM-C': 'Water main C', 'WT-04': 'Water main C',
   'DL-A1': 'Monsoon drain A', 'DL-B1': 'Culvert B', 'DL-C1': 'Retention pond C',
@@ -256,11 +248,8 @@ function buildLiveGraph({ devices, alerts, jobs, water }) {
   return { nodes, links: safe }
 }
 
-/* ------------------------------------------------------------------ */
-/*  LAYOUT – ring kuning + node pink bertaburan, semua di-pin          */
-/* ------------------------------------------------------------------ */
-const RING_A = 110 // jejari X
-const RING_B = 68 // jejari Z
+const RING_A = 110 
+const RING_B = 68 
 
 function mulberry32(seed) {
   return () => {
@@ -308,9 +297,6 @@ function applyLayout(data) {
   return data
 }
 
-/* ------------------------------------------------------------------ */
-/*  TEXTURES                                                           */
-/* ------------------------------------------------------------------ */
 let glowTexture = null
 function getGlowTexture() {
   if (glowTexture) return glowTexture
@@ -327,7 +313,6 @@ function getGlowTexture() {
   return glowTexture
 }
 
-// label sebelah kanan node, boleh berbilang baris
 function createLabelSprite(lines, worldPerPx) {
   const pad = 10
   const gap = lines[0].px * 0.9
@@ -375,9 +360,6 @@ function createLabelSprite(lines, worldPerPx) {
   return sprite
 }
 
-/* ------------------------------------------------------------------ */
-/*  COMPONENT                                                          */
-/* ------------------------------------------------------------------ */
 const fmtTime = () =>
   new Date().toLocaleString('en-GB', {
     day: 'numeric',
@@ -433,7 +415,6 @@ function IntelligenceGraph() {
     return ids
   }, [selectedNode, data])
 
-  /* HUD: fps + masa */
   useEffect(() => {
     let frames = 0
     let raf
@@ -479,7 +460,6 @@ function IntelligenceGraph() {
         const isCore = node.type === 'core'
         const group = new THREE.Group()
 
-        // titik kecil
         const dot = new THREE.Mesh(
           new THREE.SphereGeometry(node.size * (isRing ? 0.2 : 0.15), 16, 16),
           new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 1 })
@@ -502,7 +482,6 @@ function IntelligenceGraph() {
         glow.userData.base = isRing ? 0.85 : 0.5
         group.add(glow)
 
-        // label tepi node
         let label
         if (isCore) {
           label = createLabelSprite(
@@ -532,7 +511,6 @@ function IntelligenceGraph() {
         return group
       })
       .nodeThreeObjectExtend(false)
-      // garis nipis & lengkung besar
       .linkColor(() => 'rgba(255, 215, 235, 0.38)')
       .linkWidth(0)
       .linkOpacity(0.9)
@@ -574,10 +552,8 @@ function IntelligenceGraph() {
       })
       .onBackgroundClick(() => resetRef.current())
 
-    // semua node pin → tak perlu physics
     Graph.cooldownTicks(1)
 
-    // garisan orbit kuning yang lalu melalui node ring
     const ringPts = []
     for (let i = 0; i <= 200; i++) {
       const a = (i / 200) * Math.PI * 2
@@ -595,7 +571,6 @@ function IntelligenceGraph() {
     )
     Graph.scene().add(ring)
 
-    // kamera condong dari atas, macam dalam ss
     Graph.cameraPosition({ x: 0, y: 105, z: 175 }, { x: 0, y: -5, z: 0 }, 0)
 
     const controls = Graph.controls()
@@ -624,7 +599,6 @@ function IntelligenceGraph() {
     }
   }, [])
 
-  /* reset kamera */
   useEffect(() => {
     resetRef.current = () => {
       setSelectedNode(null)
@@ -641,8 +615,6 @@ function IntelligenceGraph() {
     }
   })
 
-
-  /* highlight node & link bila pilih (dulu nodeColor tak jalan sebab guna custom object) */
   useEffect(() => {
     const Graph = graphRef.current
     if (!Graph) return

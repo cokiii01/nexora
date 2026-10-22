@@ -177,13 +177,6 @@ function App() {
       />
     )
   }
-  // =========================================
-
-  // NEXORA LANDING V4 — CINEMATIC / MINIMAL
-
-  // =========================================
-
-
 
   return (
 
@@ -221,8 +214,6 @@ function App() {
 
       </div>
 
-
-
       <header className="landing-nav">
 
         <button
@@ -245,13 +236,9 @@ function App() {
 
       </header>
 
-
-
       <main className="landing-hero">
 
         <section className="landing-copy">
-
-
 
           <h2>
 
@@ -261,8 +248,6 @@ function App() {
 
           </h2>
 
-
-
           <p className="landing-lead">
 
             Township water fails silently — hidden leaks, blocked drains, sensors that die unnoticed.
@@ -271,8 +256,6 @@ function App() {
 
           </p>
 
-
-
           <div className="landing-actions">
 
             <button className="command-entry-btn" onClick={openCommand}>
@@ -280,8 +263,6 @@ function App() {
               Explore NEXORA <b>↗</b>
 
             </button>
-
-
 
             <button className="resident-entry-btn" onClick={openResident}>
 
@@ -310,7 +291,5 @@ function App() {
   )
 
 }
-
-
 
 export default App

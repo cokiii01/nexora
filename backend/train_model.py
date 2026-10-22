@@ -9,18 +9,12 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 
-# =========================================================
 # NEXORA PREDICTIVE MAINTENANCE ENGINE
 # Prototype model trained using synthetic sensor data.
-# =========================================================
 
 random.seed(42)
 np.random.seed(42)
 
-
-# ---------------------------------------------------------
-# CONFIGURATION
-# ---------------------------------------------------------
 
 SAMPLE_COUNT = 6000
 
@@ -33,10 +27,6 @@ FEATURE_NAMES = [
     "anomaly_count",
 ]
 
-
-# ---------------------------------------------------------
-# SYNTHETIC TOWNSHIP SENSOR DATA
-# ---------------------------------------------------------
 
 X = []
 y = []
@@ -62,12 +52,10 @@ for _ in range(SAMPLE_COUNT):
     # Recent anomaly events
     anomaly_count = np.random.randint(0, 11)
 
-    # -----------------------------------------------------
     # SYNTHETIC FAILURE LOGIC
     #
     # This generates labels for prototype training data.
     # Higher score = more dangerous sensor condition.
-    # -----------------------------------------------------
 
     risk_score = 0.0
 
@@ -133,10 +121,6 @@ X = np.array(X)
 y = np.array(y)
 
 
-# ---------------------------------------------------------
-# TRAIN / TEST SPLIT
-# ---------------------------------------------------------
-
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
@@ -145,10 +129,6 @@ X_train, X_test, y_train, y_test = train_test_split(
     stratify=y,
 )
 
-
-# ---------------------------------------------------------
-# RANDOM FOREST MODEL
-# ---------------------------------------------------------
 
 model = RandomForestClassifier(
     n_estimators=250,
@@ -163,10 +143,6 @@ model = RandomForestClassifier(
 
 model.fit(X_train, y_train)
 
-
-# ---------------------------------------------------------
-# EVALUATION
-# ---------------------------------------------------------
 
 predictions = model.predict(X_test)
 
@@ -202,10 +178,6 @@ print(
 )
 
 
-# ---------------------------------------------------------
-# FEATURE IMPORTANCE
-# ---------------------------------------------------------
-
 print()
 print("FEATURE IMPORTANCE")
 print("-" * 60)
@@ -224,10 +196,6 @@ for feature, importance in importance_pairs:
         f"{feature:<22} {importance * 100:>6.2f}%"
     )
 
-
-# ---------------------------------------------------------
-# SAVE MODEL
-# ---------------------------------------------------------
 
 os.makedirs(
     "models",
@@ -262,10 +230,6 @@ print(
 print("=" * 60)
 print()
 
-
-# ---------------------------------------------------------
-# TEST WT-04 CRITICAL CONDITION
-# ---------------------------------------------------------
 
 wt04_example = np.array(
     [

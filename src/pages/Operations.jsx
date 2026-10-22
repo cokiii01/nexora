@@ -3,11 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { API_BASE, WS_BASE } from '../lib/api'
 const WS_URL = WS_BASE + '/ws'
 
-
 function Operations({ openSensorInDigitalTwin, liveWT04 }) {
-  // =========================================================
-  // INCIDENTS
-  // =========================================================
 
   const [incidents, setIncidents] = useState([
     {
@@ -64,11 +60,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     },
   ])
 
-
-  // =========================================================
-  // PAGE STATE
-  // =========================================================
-
   const [selectedIncident, setSelectedIncident] =
     useState('INC-0038')
 
@@ -84,11 +75,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
   const [responseNote, setResponseNote] =
     useState('')
 
-
-  // =========================================================
-  // ACTIVITY LOG
-  // =========================================================
-
   const [activityLog, setActivityLog] = useState([
     {
       time: '08:19:31',
@@ -101,11 +87,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
       highlight: 'SL-204',
     },
   ])
-
-
-  // =========================================================
-  // AI WORK ORDER STATE
-  // =========================================================
 
   const [workOrders, setWorkOrders] =
     useState([])
@@ -121,11 +102,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
   const [gatewayConnected, setGatewayConnected] =
     useState(false)
-
-
-  // =========================================================
-  // AGENTIC AI ORCHESTRATOR
-  // =========================================================
 
   const [agentTrace, setAgentTrace] =
     useState([])
@@ -169,11 +145,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     },
   }
 
-
-  // =========================================================
-  // RESPONSE TEAMS
-  // =========================================================
-
   const [teams, setTeams] = useState([
     {
       name: 'Utility Response 02',
@@ -195,21 +166,11 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     },
   ])
 
-
-  // =========================================================
-  // SELECTED INCIDENT
-  // =========================================================
-
   const selected =
     incidents.find(
       (incident) =>
         incident.id === selectedIncident
     ) || incidents[0]
-
-
-  // =========================================================
-  // SELECTED WORK ORDER
-  // =========================================================
 
   const selectedWorkOrder = useMemo(() => {
     return (
@@ -219,7 +180,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
       ) || null
     )
   }, [workOrders, selected.id])
-
 
   const latestAgentRunId = useMemo(() => {
     const runTrace = agentTrace.filter(
@@ -231,7 +191,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
       null
     )
   }, [agentTrace])
-
 
   const visibleAgentTrace = useMemo(() => {
     if (!latestAgentRunId) {
@@ -245,7 +204,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     )
   }, [agentTrace, latestAgentRunId])
 
-
   const latestAgentStates = useMemo(() => {
     const states = {}
 
@@ -255,7 +213,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
     return states
   }, [visibleAgentTrace])
-
 
   const orchestrationState = useMemo(() => {
     const governance =
@@ -298,11 +255,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     visibleAgentTrace,
   ])
 
-
-  // =========================================================
-  // HELPERS
-  // =========================================================
-
   const getCurrentTime = () => {
     return new Date().toLocaleTimeString(
       'en-GB',
@@ -313,7 +265,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
       }
     )
   }
-
 
   const addActivity = (
     text,
@@ -328,11 +279,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
       ...currentLog,
     ])
   }
-
-
-  // =========================================================
-  // FETCH WORK ORDERS
-  // =========================================================
 
   const fetchWorkOrders = async () => {
     try {
@@ -369,11 +315,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     }
   }
 
-
-  // =========================================================
-  // FETCH AGENT TRACE
-  // =========================================================
-
   const fetchAgentTrace = async () => {
     try {
       const response = await fetch(
@@ -403,11 +344,8 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     }
   }
 
-
-  // =========================================================
   // SHARED WT-04 STATE
   // Digital Twin is the source of truth for the water scenario.
-  // =========================================================
 
   useEffect(() => {
     if (!liveWT04) return
@@ -450,19 +388,10 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     }
   }, [liveWT04])
 
-  // =========================================================
-  // INITIAL ENGINE LOAD
-  // =========================================================
-
   useEffect(() => {
     fetchWorkOrders()
     fetchAgentTrace()
   }, [])
-
-
-  // =========================================================
-  // WEBSOCKET
-  // =========================================================
 
   useEffect(() => {
     let socket
@@ -470,12 +399,10 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     let keepAliveTimer
     let componentActive = true
 
-
     const connectGateway = () => {
       if (!componentActive) return
 
       socket = new WebSocket(WS_URL)
-
 
       socket.onopen = () => {
         if (!componentActive) return
@@ -493,7 +420,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
         }, 20000)
       }
 
-
       socket.onmessage = (event) => {
         try {
           const message =
@@ -504,11 +430,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
           const data =
             message.data
-
-
-          // -----------------------------------------
-          // AGENTIC AI TRACE
-          // -----------------------------------------
 
           if (
             eventType ===
@@ -540,11 +461,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               }
             )
           }
-
-
-          // -----------------------------------------
-          // WORK ORDER GENERATED
-          // -----------------------------------------
 
           if (
             eventType ===
@@ -582,11 +498,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             )
           }
 
-
-          // -----------------------------------------
-          // WORK ORDER APPROVED
-          // -----------------------------------------
-
           if (
             eventType ===
             'WORK_ORDER_APPROVED'
@@ -607,11 +518,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               data.work_order_id
             )
           }
-
-
-          // -----------------------------------------
-          // WORK ORDER DISPATCHED
-          // -----------------------------------------
 
           if (
             eventType ===
@@ -672,11 +578,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             )
           }
 
-
-          // -----------------------------------------
-          // RESET
-          // -----------------------------------------
-
           if (
             eventType ===
             'SYSTEM_RESET'
@@ -731,13 +632,11 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
         }
       }
 
-
       socket.onerror = () => {
         if (!componentActive) return
 
         setGatewayConnected(false)
       }
-
 
       socket.onclose = () => {
         if (!componentActive) return
@@ -757,9 +656,7 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
       }
     }
 
-
     connectGateway()
-
 
     return () => {
       componentActive = false
@@ -781,11 +678,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
       }
     }
   }, [])
-
-
-  // =========================================================
-  // APPROVE + DISPATCH
-  // =========================================================
 
   const approveAndDispatch = async (
     workOrder
@@ -823,11 +715,8 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
         )
       }
 
-
-      // -----------------------------------------
       // LOCAL UPDATE
       // WebSocket will also confirm the event.
-      // -----------------------------------------
 
       setWorkOrders(
         (currentOrders) =>
@@ -839,7 +728,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                 : order
           )
       )
-
 
       setIncidents(
         (currentIncidents) =>
@@ -860,7 +748,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
           )
       )
 
-
       setTeams(
         (currentTeams) =>
           currentTeams.map(
@@ -880,7 +767,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
           )
       )
 
-
       addActivity(
         'Human-approved AI dispatch completed for',
         data.work_order_id
@@ -899,11 +785,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     }
   }
 
-
-  // =========================================================
-  // OPEN RESPONSE MODAL
-  // =========================================================
-
   const openResponse = () => {
     setResponseStatus(
       selected.status === 'RESOLVED'
@@ -920,19 +801,9 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     setResponseOpen(true)
   }
 
-
-  // =========================================================
-  // CLOSE RESPONSE MODAL
-  // =========================================================
-
   const closeResponse = () => {
     setResponseOpen(false)
   }
-
-
-  // =========================================================
-  // CONFIRM MANUAL RESPONSE
-  // =========================================================
 
   const confirmResponse = () => {
     setIncidents(
@@ -952,7 +823,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
         )
     )
 
-
     addActivity(
       responseStatus ===
         'RESOLVED'
@@ -961,14 +831,8 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
       responseStatus
     )
 
-
     setResponseOpen(false)
   }
-
-
-  // =========================================================
-  // DIGITAL TWIN
-  // =========================================================
 
   const viewOnDigitalTwin = () => {
     if (!selected.sensorID) {
@@ -984,17 +848,8 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     }
   }
 
-
-  // =========================================================
-  // RENDER
-  // =========================================================
-
   return (
     <section className="operations-page">
-
-      {/* =====================================================
-          HEADER
-      ====================================================== */}
 
       <div className="operations-heading">
 
@@ -1012,7 +867,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             and operational oversight.
           </p>
         </div>
-
 
         <div className="operations-live">
           <span className="live-dot"></span>
@@ -1043,11 +897,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
       </div>
 
-
-      {/* =====================================================
-          TOP STATS
-      ====================================================== */}
-
       <div className="operations-stats">
 
         <div className="operation-stat">
@@ -1069,7 +918,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             Across all sectors
           </small>
         </div>
-
 
         <div className="operation-stat critical">
           <span>
@@ -1093,7 +941,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
           </small>
         </div>
 
-
         <div className="operation-stat">
           <span>
             AI WORK ORDERS
@@ -1107,7 +954,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             Predictive maintenance
           </small>
         </div>
-
 
         <div className="operation-stat">
           <span>
@@ -1124,11 +970,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
         </div>
 
       </div>
-
-
-      {/* =====================================================
-          AGENTIC AI ORCHESTRATOR
-      ====================================================== */}
 
       <div className={`agent-orchestrator ${orchestrationState.tone}`}>
 
@@ -1149,7 +990,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               planning, team optimisation and human governance.
             </p>
           </div>
-
 
           <div className="agent-orchestrator-status">
 
@@ -1174,7 +1014,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
           </div>
 
         </div>
-
 
         <div className="agent-pipeline">
 
@@ -1234,7 +1073,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
                   </div>
 
-
                   {index <
                     agentOrder.length - 1 && (
                     <div
@@ -1255,7 +1093,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
         </div>
 
-
         <div className="agent-trace-shell">
 
           <div className="agent-trace-heading">
@@ -1271,14 +1108,12 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               </small>
             </div>
 
-
             <div className="agent-run-id">
               {latestAgentRunId ||
                 'NO ACTIVE RUN'}
             </div>
 
           </div>
-
 
           <div className="agent-trace-list">
 
@@ -1353,20 +1188,17 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                           {time}
                         </div>
 
-
                         <div
                           className={`agent-trace-badge agent-${trace.agent?.toLowerCase()}`}
                         >
                           {trace.agent}
                         </div>
 
-
                         <div className="agent-trace-content">
 
                           <strong>
                             {trace.action}
                           </strong>
-
 
                           <div className="agent-trace-details">
 
@@ -1500,7 +1332,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
                         </div>
 
-
                         <div
                           className={`agent-trace-state ${
                             trace.status ===
@@ -1534,11 +1365,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
         </div>
 
       </div>
-
-
-      {/* =====================================================
-          AI WORK ORDER COMMAND
-      ====================================================== */}
 
       {selectedWorkOrder && (
         <div
@@ -1599,7 +1425,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
             </div>
 
-
             <div className="nwo-status-area">
 
               <span className="nwo-priority">
@@ -1632,7 +1457,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
           </div>
 
-
           {/* INTELLIGENCE GRID */}
 
           <div className="nwo-intelligence-grid">
@@ -1657,7 +1481,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
             </div>
 
-
             <div className="nwo-data-card">
 
               <span>
@@ -1676,7 +1499,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               </small>
 
             </div>
-
 
             <div className="nwo-data-card">
 
@@ -1700,7 +1522,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
             </div>
 
-
             <div className="nwo-data-card">
 
               <span>
@@ -1718,7 +1539,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             </div>
 
           </div>
-
 
           {/* BODY */}
 
@@ -1743,7 +1563,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     } TASKS
                   </small>
                 </div>
-
 
                 <div className="nwo-scope-list">
 
@@ -1780,7 +1599,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
               </div>
 
-
               <div className="nwo-section">
 
                 <div className="nwo-section-heading">
@@ -1788,7 +1606,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     SAFETY CONTROL
                   </span>
                 </div>
-
 
                 <div className="nwo-safety-list">
 
@@ -1822,7 +1639,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
             </div>
 
-
             {/* RIGHT */}
 
             <div className="nwo-column">
@@ -1838,7 +1654,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     RECOMMENDED
                   </small>
                 </div>
-
 
                 <div className="nwo-team">
 
@@ -1864,7 +1679,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     </span>
                   </div>
 
-
                   <div className="nwo-match-score">
                     <span>
                       MATCH SCORE
@@ -1880,7 +1694,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                   </div>
 
                 </div>
-
 
                 <div className="nwo-reasons">
 
@@ -1910,7 +1723,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
               </div>
 
-
               {/* TELEMETRY */}
 
               <div className="nwo-telemetry">
@@ -1924,7 +1736,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     ML INPUT SNAPSHOT
                   </small>
                 </div>
-
 
                 <div className="nwo-telemetry-grid">
 
@@ -1942,7 +1753,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     </strong>
                   </div>
 
-
                   <div>
                     <span>
                       FLOW RATE
@@ -1956,7 +1766,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                       }
                     </strong>
                   </div>
-
 
                   <div>
                     <span>
@@ -1972,7 +1781,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     </strong>
                   </div>
 
-
                   <div>
                     <span>
                       TEMPERATURE
@@ -1987,7 +1795,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     </strong>
                   </div>
 
-
                   <div>
                     <span>
                       DROP RATE
@@ -2001,7 +1808,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                       }
                     </strong>
                   </div>
-
 
                   <div>
                     <span>
@@ -2025,7 +1831,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
           </div>
 
-
           {/* RECOMMENDED ACTION */}
 
           <div className="nwo-recommendation">
@@ -2042,7 +1847,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             </p>
 
           </div>
-
 
           {/* APPROVAL */}
 
@@ -2068,7 +1872,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                 }
               </span>
 
-
               <div>
 
                 <strong>
@@ -2080,7 +1883,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                       : 'HUMAN APPROVAL REQUIRED'
                   }
                 </strong>
-
 
                 <p>
                   {
@@ -2095,7 +1897,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               </div>
 
             </div>
-
 
             {
               selectedWorkOrder
@@ -2132,7 +1933,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
           </div>
 
-
           {workOrderError && (
             <div className="nwo-error">
               {workOrderError}
@@ -2141,11 +1941,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
         </div>
       )}
-
-
-      {/* =====================================================
-          NO WORK ORDER / ENGINE STATUS
-      ====================================================== */}
 
       {selected.id ===
         'INC-0041' &&
@@ -2174,11 +1969,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
         )}
 
-
-      {/* =====================================================
-          MAIN OPERATIONS GRID
-      ====================================================== */}
-
       <div className="operations-layout">
 
         {/* INCIDENT COMMAND */}
@@ -2197,7 +1987,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               </h2>
             </div>
 
-
             <span>
               {
                 incidents.filter(
@@ -2209,7 +1998,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             </span>
 
           </div>
-
 
           <div className="incident-command-list">
 
@@ -2241,7 +2029,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     {incident.time}
                   </div>
 
-
                   <div className="incident-main">
 
                     <div className="incident-id">
@@ -2257,7 +2044,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     </span>
 
                   </div>
-
 
                   <div className="incident-state">
 
@@ -2284,17 +2070,11 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
         </div>
 
-
-        {/* ===================================================
-            INCIDENT DETAIL
-        ==================================================== */}
-
         <aside className="incident-inspector">
 
           <p className="section-label">
             INCIDENT DETAIL
           </p>
-
 
           <div className="incident-inspector-title">
 
@@ -2314,7 +2094,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
             </div>
 
-
             <span
               className={`severity ${selected.severity.toLowerCase()}`}
             >
@@ -2322,7 +2101,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             </span>
 
           </div>
-
 
           {/* SUMMARY */}
 
@@ -2338,7 +2116,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
           </div>
 
-
           {/* METADATA */}
 
           <div className="incident-metadata">
@@ -2353,7 +2130,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               </strong>
             </div>
 
-
             <div>
               <span>
                 SOURCE
@@ -2364,7 +2140,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               </strong>
             </div>
 
-
             <div>
               <span>
                 ASSIGNED TEAM
@@ -2374,7 +2149,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                 {selected.team}
               </strong>
             </div>
-
 
             <div>
               <span>
@@ -2387,7 +2161,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             </div>
 
           </div>
-
 
           {/* AI LINK */}
 
@@ -2421,7 +2194,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
           )}
 
-
           {/* ACTIONS */}
 
           <div className="incident-actions">
@@ -2443,7 +2215,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               VIEW ON DIGITAL TWIN
             </button>
 
-
             <button
               type="button"
               className="primary-action"
@@ -2459,11 +2230,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
         </aside>
 
       </div>
-
-
-      {/* =====================================================
-          LOWER SECTION
-      ====================================================== */}
 
       <div className="operations-lower">
 
@@ -2484,7 +2250,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             </div>
 
           </div>
-
 
           <div className="team-list">
 
@@ -2507,7 +2272,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                     </span>
 
                   </div>
-
 
                   <div>
 
@@ -2537,7 +2301,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
         </div>
 
-
         {/* ACTIVITY LOG */}
 
         <div className="operations-log">
@@ -2555,7 +2318,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
             </div>
 
           </div>
-
 
           <div className="activity-list">
 
@@ -2595,11 +2357,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
       </div>
 
-
-      {/* =====================================================
-          RESPONSE MODAL
-      ====================================================== */}
-
       {responseOpen && (
 
         <div
@@ -2636,7 +2393,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
               </div>
 
-
               <button
                 type="button"
                 className="response-close"
@@ -2648,7 +2404,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               </button>
 
             </div>
-
 
             {/* INCIDENT SOURCE */}
 
@@ -2664,7 +2419,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
             </div>
 
-
             {/* STATUS */}
 
             <div className="response-field">
@@ -2672,7 +2426,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               <label>
                 RESPONSE STATUS
               </label>
-
 
               <div className="response-status-options">
 
@@ -2693,7 +2446,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                   DISPATCHED
                 </button>
 
-
                 <button
                   type="button"
                   className={
@@ -2710,7 +2462,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
                 >
                   IN PROGRESS
                 </button>
-
 
                 <button
                   type="button"
@@ -2733,7 +2484,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
             </div>
 
-
             {/* TEAM */}
 
             <div className="response-field">
@@ -2741,7 +2491,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               <label htmlFor="response-team">
                 ASSIGN RESPONSE TEAM
               </label>
-
 
               <select
                 id="response-team"
@@ -2779,7 +2528,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
             </div>
 
-
             {/* NOTE */}
 
             <div className="response-field">
@@ -2787,7 +2535,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               <label htmlFor="response-note">
                 RESPONSE NOTE
               </label>
-
 
               <textarea
                 id="response-note"
@@ -2804,7 +2551,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
 
             </div>
 
-
             {/* FOOTER */}
 
             <div className="response-modal-footer">
@@ -2818,7 +2564,6 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
               >
                 CANCEL
               </button>
-
 
               <button
                 type="button"
@@ -2841,6 +2586,5 @@ function Operations({ openSensorInDigitalTwin, liveWT04 }) {
     </section>
   )
 }
-
 
 export default Operations

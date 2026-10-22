@@ -1,5 +1,4 @@
 // Live township scenarios inside the Digital Twin.
-// Unlike the legacy scenario simulator, these drive the /api/v2 engine, so the
 // full chain fires: sensors → rules → work order → resident alert → 3D model.
 import { useState } from 'react'
 import { api, usePoll } from '../lib/api'
@@ -34,7 +33,7 @@ function LiveScenarioBar({ onRun }) {
       setActive(sc.key)
       onRun?.()
       setMsg(sc.key === 'burst'
-        ? 'Burst injected. After ~5 readings the flow rule trips: alert + work order, and Zone C pulses in 3D.'
+        ? 'Burst injected. After about 15 seconds the flow rule trips: a “Possible burst main” alert and work order open for Zone C (see Work orders).'
         : 'Rain started. Watch the drains fill in 3D — residents are alerted as each stage is crossed.')
     } catch (e) {
       setMsg(e.status === 401 || e.status === 403 ? 'Sign in as operator to run live scenarios.' : e.message)

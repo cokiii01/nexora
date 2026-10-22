@@ -12,9 +12,6 @@ import { usePoll } from '../lib/api'
 import { stageLabel } from '../lib/labels'
 import { WaterFloodLayer } from './TownshipWater3D'
 
-/* ------------------------------------------------------------------ */
-/*  Palette (visual only)                                              */
-/* ------------------------------------------------------------------ */
 const PALETTE = {
   ground: '#0a1215',
   plate: '#0f1b20',
@@ -54,9 +51,6 @@ const rand = (n) => {
   return x - Math.floor(x)
 }
 
-/* ------------------------------------------------------------------ */
-/*  Windows (one instanced mesh per building = one draw call)          */
-/* ------------------------------------------------------------------ */
 function Windows({ scale, color, seed }) {
   const ref = useRef()
 
@@ -109,9 +103,6 @@ function Windows({ scale, color, seed }) {
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Building                                                           */
-/* ------------------------------------------------------------------ */
 function Building({ position, scale = [2, 2, 2], type = 'residential' }) {
   const wall =
     type === 'commercial'
@@ -190,9 +181,6 @@ function Building({ position, scale = [2, 2, 2], type = 'residential' }) {
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Roads                                                              */
-/* ------------------------------------------------------------------ */
 function Road({ position, scale, rotation = [0, 0, 0] }) {
   return (
     <mesh position={position} scale={scale} rotation={rotation} receiveShadow>
@@ -263,9 +251,6 @@ function StreetLamp({ position }) {
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Trees                                                              */
-/* ------------------------------------------------------------------ */
 function Tree({ position }) {
   return (
     <group position={position}>
@@ -285,9 +270,6 @@ function Tree({ position }) {
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Zones                                                              */
-/* ------------------------------------------------------------------ */
 function ZoneFloor({ position, scale, color }) {
   return (
     <group position={position}>
@@ -325,9 +307,6 @@ function ZoneLabel({ position, title, subtitle }) {
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Critical pulse (logic unchanged)                                   */
-/* ------------------------------------------------------------------ */
 function CriticalAnomalyPulse() {
   const ringOne = useRef()
   const ringTwo = useRef()
@@ -375,9 +354,6 @@ function CriticalAnomalyPulse() {
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Sensor marker (props, status logic and onClick unchanged)          */
-/* ------------------------------------------------------------------ */
 function SensorMarker({
   position,
   id,
@@ -467,9 +443,6 @@ function SensorMarker({
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Scene                                                              */
-/* ------------------------------------------------------------------ */
 function TownshipScene({
   liveWT03,
   liveWT04,
@@ -555,7 +528,6 @@ function TownshipScene({
         <meshStandardMaterial color="#2df0b8" emissive="#2df0b8" emissiveIntensity={0.5} />
       </mesh>
 
-      {/* Zone floors (status colours unchanged) */}
       <ZoneFloor
         position={[-6.8, 0, -4.8]}
         scale={[6.8, 0.08, 6.2]}
@@ -637,7 +609,6 @@ function TownshipScene({
       <ZoneLabel position={[7, 6.5, -7.6]} title="ZONE B" subtitle="COMMERCIAL" />
       <ZoneLabel position={[0, 4.1, 8.6]} title="ZONE C" subtitle="RESIDENTIAL · WATER NETWORK" />
 
-      {/* Sensors (ids, values, statuses, handlers unchanged) */}
       <SensorMarker
         position={[2.4, 0.1, 4.2]}
         id="WT-04"
@@ -682,9 +653,6 @@ function TownshipScene({
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Shell (markup + class names unchanged so your CSS still applies)   */
-/* ------------------------------------------------------------------ */
 function Township3D({
   liveWT03,
   liveWT04,

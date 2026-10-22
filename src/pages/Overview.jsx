@@ -1,4 +1,4 @@
-// NEXORA V10 — Executive Overview (dark CRM dashboard style), driven by the live /api/v2 services.
+// Overview: live summary driven by the /api/v2 services.
 // Falls back to the WT-04 snapshot from the Digital Twin when the backend is offline.
 import CountUp from '../components/CountUp'
 import { SlaBar, Stage, Status } from '../components/ui'
@@ -46,7 +46,7 @@ function Overview({ setActivePage, openSensorInDigitalTwin, liveWT04, summary })
         <div className="cx-banner warn">Backend offline — showing static snapshot. Start it with <code>cd backend &amp;&amp; uvicorn main:app --reload</code>.</div>
       )}
 
-      {/* ---------- one story: water fails silently ---------- */}
+      {/* one story: water fails silently */}
       <p className="story-head">Township water fails silently — NEXORA catches it three ways</p>
       <div className="story-strip">
         <button type="button" onClick={() => setActivePage('water')}><strong>Hidden leaks</strong><span>Night-flow analysis finds loss nobody reported.</span></button>
@@ -54,7 +54,7 @@ function Overview({ setActivePage, openSensorInDigitalTwin, liveWT04, summary })
         <button type="button" onClick={() => setActivePage('devices')}><strong>Failing sensors</strong><span>A frozen sensor is caught, never trusted.</span></button>
       </div>
 
-      {/* ---------- KPI strip ---------- */}
+      {/* KPI strip */}
       <div className="ov-kpis ov-card" style={{ '--i': 0 }}>
         {kpis.map((k, idx) => (
           <button key={k.label} type="button" className="ov-kpi clickable" onClick={() => setActivePage(k.page)}>
@@ -67,7 +67,7 @@ function Overview({ setActivePage, openSensorInDigitalTwin, liveWT04, summary })
         ))}
       </div>
 
-      {/* ---------- Residents by zone + priority alert ---------- */}
+      {/* Residents by zone + priority alert */}
       <div className="ov-grid ov-grid-main">
         <article className="ov-card ov-capacity" style={{ '--i': 1 }}>
           <header className="ov-card-head">
@@ -161,7 +161,7 @@ function Overview({ setActivePage, openSensorInDigitalTwin, liveWT04, summary })
         </aside>
       </div>
 
-      {/* ---------- Open jobs table + jobs by category ---------- */}
+      {/* Open jobs table + jobs by category */}
       <div className="ov-grid ov-grid-main">
         <article className="ov-card ov-table-card" style={{ '--i': 3 }}>
           <header className="ov-card-head">
@@ -222,7 +222,7 @@ function Overview({ setActivePage, openSensorInDigitalTwin, liveWT04, summary })
         </article>
       </div>
 
-      {/* ---------- Night flow + flood sensors ---------- */}
+      {/* Night flow + flood sensors */}
       <div className="ov-grid ov-grid-even">
         <article className="ov-card ov-stages" style={{ '--i': 5 }}>
           <header className="ov-card-head">

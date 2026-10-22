@@ -1,52 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { API_BASE, WS_BASE } from '../lib/api'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import Township3D from '../components/Township3D'
 import LiveScenarioBar from '../components/LiveScenarioBar'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function DigitalTwin({
   targetSensor,
@@ -55,114 +11,11 @@ function DigitalTwin({
   onLiveWT04Change,
 }) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const [, setSelectedZone] = useState('C')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const [selectedSensorID, setSelectedSensorID] = useState(null)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // LIVE WT-04 STATE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const [liveWT04, setLiveWT04] = useState(
     initialLiveWT04 ?? {
@@ -172,14 +25,11 @@ function DigitalTwin({
     }
   )
 
-
-
   const [liveWT03, setLiveWT03] = useState({
     value: 124,
     status: 'Normal',
     connected: false,
   })
-
 
   const [liveEN12, setLiveEN12] = useState({
 
@@ -190,8 +40,6 @@ function DigitalTwin({
     connected: false,
 
   })
-
-
 
   const [liveTR08, setLiveTR08] = useState({
     value: 64,
@@ -207,2023 +55,229 @@ function DigitalTwin({
     }
   }, [liveWT04, onLiveWT04Change])
 
-
-
   const [scenarioAnomaly, setScenarioAnomaly] = useState(null)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const [, setSimulationRunning] =
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     useState(false)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const [anomaly, setAnomaly] = useState(null)
 
-
-
-
-
-
-
-  // =====================================================
-
-
-
   // SCENARIO SIMULATOR
 
-
-
-  // =====================================================
-
-
+  
 
   
 
-
-
   
 
-
-
   
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // ENTERPRISE IOT DATA PIPELINE
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const [, setIotPipeline] = useState({
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     status: 'STANDBY',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     mqtt_ingestion: 'READY',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     event_bus: 'READY',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     devices_total: 4,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     devices_online: 4,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     device_health_percent: 100,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     events_processed: 0,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ingestion_rate_msg_s: 0,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     average_pipeline_latency_ms: 0,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const [, setIotEvents] = useState([])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // SENSOR DATA
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const sensors = useMemo(
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     () => ({
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       'EN-12': {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         id: 'EN-12',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         name: 'Energy Monitor',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         zone: 'Zone A',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         zoneKey: 'A',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         type: 'Electrical Grid',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         value: `${liveEN12.value} kW`,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         status: liveEN12.status,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         updated: '2 sec ago',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       'TR-08': {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         id: 'TR-08',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         name: 'Traffic Sensor',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         zone: 'Zone B',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         zoneKey: 'B',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         type: 'Mobility Network',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         value: `${liveTR08.value} veh/min`,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         status: liveTR08.status,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         updated: '1 sec ago',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       'WT-03': {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         id: 'WT-03',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         name: 'Water Flow Sensor',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         zone: 'Zone C',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         zoneKey: 'C',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         type: 'Water Network',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         value: `${liveWT03.value} L/min`,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         status: liveWT03.status,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         updated: liveWT03.connected ? 'Live' : 'Gateway Offline',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       'WT-04': {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         id: 'WT-04',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         name: 'Water Pressure Sensor',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         zone: 'Zone C',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         zoneKey: 'C',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         type: 'Water Network',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         value: `${liveWT04.value} bar`,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         status: liveWT04.status,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         updated: liveWT04.connected
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           ? 'Live'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           : 'Gateway Offline',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     [liveWT03, liveWT04, liveEN12, liveTR08]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const selectedSensor = selectedSensorID
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ? sensors[selectedSensorID]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     : null
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // IOT PIPELINE INITIAL SNAPSHOT
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   useEffect(() => {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     const loadPipeline = async () => {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       try {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         const [pipelineResponse, eventsResponse] = await Promise.all([
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           fetch(`${API_BASE}/api/iot/pipeline`),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           fetch(`${API_BASE}/api/iot/events?limit=12`),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         if (pipelineResponse.ok) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           setIotPipeline(await pipelineResponse.json())
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         if (eventsResponse.ok) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           const payload = await eventsResponse.json()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           setIotEvents([...(payload.events || [])].reverse())
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       } catch (error) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         console.error('Unable to load NEXORA IoT pipeline:', error)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     loadPipeline()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }, [])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // NEXORA REAL-TIME DATA GATEWAY
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   useEffect(() => {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     let socket = null
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     let reconnectTimer = null
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     let intentionallyClosed = false
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     const connectGateway = () => {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       socket = new WebSocket(
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         WS_BASE + '/ws'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       socket.onopen = () => {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         console.log(
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           'NEXORA Real-Time Gateway connected'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         setLiveWT04((current) => ({
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           ...current,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           connected: true,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         }))
 
@@ -2231,467 +285,49 @@ function DigitalTwin({
         setLiveEN12((current) => ({ ...current, connected: true }))
         setLiveTR08((current) => ({ ...current, connected: true }))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         socket.send('NEXORA_CLIENT_CONNECTED')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       socket.onmessage = (event) => {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         try {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           const message = JSON.parse(event.data)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           console.log(
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             'NEXORA LIVE EVENT:',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             message
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          // ---------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           // CONNECTION MESSAGE
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          // ---------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           if (message.event === 'CONNECTED') {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             setLiveWT04((current) => ({
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               ...current,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               connected: true,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             }))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             return
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          // ---------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           // ENTERPRISE IOT PIPELINE
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          // ---------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           if (message.event === 'IOT_PIPELINE_STATUS') {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             setIotPipeline(message.data)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             return
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           if (message.event === 'IOT_PIPELINE_EVENT') {
             const pipelineEvent = message.data
@@ -2748,525 +384,63 @@ function DigitalTwin({
             return
           }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          // ---------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           // SENSOR UPDATE / RESET
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          // ---------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           if (
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             message.event === 'SENSOR_UPDATE' ||
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             message.event === 'SYSTEM_RESET'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           ) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             const sensor = message.data
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             if (sensor?.sensor_id !== 'WT-04') {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               return
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             const formattedStatus =
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               sensor.status === 'CRITICAL'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 ? 'Critical'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 : sensor.status === 'WARNING'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   ? 'Warning'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   : 'Normal'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             setLiveWT04({
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               value: sensor.value,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               status: formattedStatus,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               connected: true,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             if (
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               message.event === 'SYSTEM_RESET'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             ) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               setAnomaly(null)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               setSimulationRunning(false)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          // ---------------------------------------------
-
           // MULTI-SCENARIO SENSOR UPDATE
-
-          // ---------------------------------------------
-
-
 
           if (message.event === 'SCENARIO_SENSOR_UPDATE') {
 
@@ -3284,8 +458,6 @@ function DigitalTwin({
 
                   : 'Normal'
 
-
-
             if (sensor.sensor_id === 'EN-12') {
 
               setLiveEN12({
@@ -3299,8 +471,6 @@ function DigitalTwin({
               })
 
             }
-
-
 
             if (sensor.sensor_id === 'TR-08') {
 
@@ -3316,8 +486,6 @@ function DigitalTwin({
 
             }
 
-
-
             if (sensor.scenario === 'RESET') {
 
               setScenarioAnomaly(null)
@@ -3330,8 +498,6 @@ function DigitalTwin({
 
           }
 
-
-
           if (message.event === 'SCENARIO_ANOMALY') {
 
             const sensor = message.data
@@ -3339,8 +505,6 @@ function DigitalTwin({
             setScenarioAnomaly(sensor)
 
             setSimulationRunning(false)
-
-
 
             if (sensor.sensor_id === 'EN-12') {
 
@@ -3351,8 +515,6 @@ function DigitalTwin({
               setSelectedSensorID('EN-12')
 
             }
-
-
 
             if (sensor.sensor_id === 'TR-08') {
 
@@ -3368,1763 +530,185 @@ function DigitalTwin({
 
           }
 
-
-
-          // ---------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           // ANOMALY EVENT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          // ---------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           if (
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             message.event === 'ANOMALY_DETECTED'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           ) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             setAnomaly(message.data)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             setSimulationRunning(false)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             setLiveWT04({
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               value: message.data.value,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               status: 'Critical',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               connected: true,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             setSelectedZone('C')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             setSelectedSensorID('WT-04')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         } catch (error) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           console.error(
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             'Invalid NEXORA Gateway event:',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             error
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       socket.onerror = (error) => {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         console.error(
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           'NEXORA Gateway connection error:',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           error
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       socket.onclose = () => {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         console.log(
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           'NEXORA Gateway disconnected'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         setLiveWT04((current) => ({
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           ...current,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           connected: false,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         if (!intentionallyClosed) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           reconnectTimer = setTimeout(() => {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             connectGateway()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           }, 2000)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     connectGateway()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     return () => {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       intentionallyClosed = true
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       if (reconnectTimer) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         clearTimeout(reconnectTimer)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       if (socket) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         socket.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   }, [])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // AUTO OPEN SENSOR FROM OTHER MODULES
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   useEffect(() => {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     if (!targetSensor) return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     const sensor = sensors[targetSensor]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     if (!sensor) return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     setSelectedZone(sensor.zoneKey)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     setSelectedSensorID(sensor.id)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     if (clearTargetSensor) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       clearTargetSensor()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   }, [
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     targetSensor,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     clearTargetSensor,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     sensors,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   ])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // OPEN ZONE
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // OPEN SENSOR
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const openSensor = (sensorID) => {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     const sensor = sensors[sensorID]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     if (!sensor) return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     setSelectedZone(sensor.zoneKey)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     setSelectedSensorID(sensor.id)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // RUN SCENARIO SIMULATION
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
 
   
 
-
-
   
-
-
-
-  
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // RESET WATER SIMULATION
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // IOT PIPELINE CONTROLS
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // MARKER STATUS
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // =====================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   return (
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <section className="digital-twin-page">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      {/* =================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          PAGE HEADER
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ================================================= */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       <div className="dt-heading dt-heading-clean">
 
@@ -5140,13 +724,7 @@ function DigitalTwin({
 
             </div>
 
-
-
-            {/* gateway badge removed for the water-only demo */}
-
           </div>
-
-
 
           <p className="dt-description">
 
@@ -5154,147 +732,16 @@ function DigitalTwin({
 
           </p>
 
-
-
-
         </div>
 
       </div>
 
-
-
-
-
-
       {/* Live township scenarios — drive the /api/v2 engine (work orders, resident alerts, 3D water layer) */}
       <LiveScenarioBar />
 
-      {/* =================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          MAIN DIGITAL TWIN
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ================================================= */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <div className="dt-layout">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        {/* ===============================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            MAP
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        =============================================== */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           <Township3D
-
-
-
-
-
-
 
             liveWT03={liveWT03}
             liveWT04={liveWT04}
@@ -5305,1634 +752,195 @@ function DigitalTwin({
 
             onSensorSelect={openSensor}
 
-
-
-
-
-
-
           />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{/* ===============================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            RIGHT PANEL
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        =============================================== */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         <aside className="zone-details">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           {selectedSensor ? (
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             <div className="sensor-details">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               <button
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 type="button"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 className="sensor-back"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 onClick={() =>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   setSelectedSensorID(null)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               >
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 ← BACK TO ZONE
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               </button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               <p className="section-label">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 SENSOR NODE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               </p>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               <div className="sensor-detail-heading">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   <h2>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     {selectedSensor.id}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   </h2>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   <span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     {selectedSensor.name}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   </span>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 <span
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   className={
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     selectedSensor.status ===
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     'Critical'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       ? 'sensor-health critical'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       : selectedSensor.status ===
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                           'Warning'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         ? 'sensor-health warning'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         : 'sensor-health'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 >
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   ● {selectedSensor.status}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 </span>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               <div className="sensor-reading">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   LIVE READING
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 </span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 <strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   {selectedSensor.value}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 </strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <small>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   Updated {selectedSensor.updated}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 </small>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               <div className="sensor-meta">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   <span>LOCATION</span>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   <strong>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     {selectedSensor.zone}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   </strong>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   <span>NETWORK</span>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   <strong>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     {selectedSensor.type}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   </strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 <div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   <span>NODE ID</span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   <strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     {selectedSensor.id}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   </strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-              {/* =========================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                  LIVE GATEWAY INFORMATION
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-              ========================================= */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               {selectedSensor.id === 'WT-04' && (
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 <div className="dt-gateway-card">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   <div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     <span>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       REAL-TIME GATEWAY
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     </span>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     <strong
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       className={
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         liveWT04.connected
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                           ? 'gateway-text-online'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                           : 'gateway-text-offline'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     >
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       ●{' '}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       {liveWT04.connected
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         ? 'CONNECTED'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         : 'OFFLINE'}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     </strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   <p>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     Live telemetry received through
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     NEXORA FastAPI WebSocket Gateway.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   </p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               )}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               {selectedSensor.id !== 'WT-04' &&
 
@@ -6953,8 +961,6 @@ function DigitalTwin({
                       <strong>{scenarioAnomaly.severity}</strong>
 
                     </div>
-
-
 
                     <div className="dt-anomaly-grid">
 
@@ -6984,8 +990,6 @@ function DigitalTwin({
 
                     </div>
 
-
-
                     <div className="dt-recommendation">
 
                       <span>OPERATIONAL IMPACT</span>
@@ -6993,8 +997,6 @@ function DigitalTwin({
                       <p>{scenarioAnomaly.impact}</p>
 
                     </div>
-
-
 
                     <div className="dt-recommendation">
 
@@ -7008,967 +1010,119 @@ function DigitalTwin({
 
                 )}
 
-
-
-              {/* =========================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                  PREDICTIVE ANOMALY
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-              ========================================= */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               {selectedSensor.id === 'WT-04' &&
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 anomaly && (
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                   <div className="dt-anomaly-card">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     <div className="dt-anomaly-top">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       <div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         <span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                           NEXORA INTELLIGENCE
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         </span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         <h3>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                           Predictive Risk Detected
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         </h3>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       <strong>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         CRITICAL
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       </strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     <div className="dt-risk-score">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       <span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         FAILURE RISK
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       </span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       <strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {anomaly.failure_risk}%
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       </strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     <div className="dt-anomaly-grid">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       <div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         <span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                           SENSOR
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         </span>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         <strong>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                           {anomaly.sensor_id}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         </strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       <div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         <span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                           FAILURE WINDOW
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         </span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         <strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                           {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                             anomaly.predicted_failure_window
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                           }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         </strong>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     <div className="dt-recommendation">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       <span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         RECOMMENDED ACTION
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                       </span>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       <p>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                           anomaly.recommended_action
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                       </p>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                   </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 )}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
           ) : (
             <div className="zone-hint">
@@ -7977,145 +1131,14 @@ function DigitalTwin({
             </div>
           )}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         </aside>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export default DigitalTwin
