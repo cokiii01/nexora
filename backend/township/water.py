@@ -1,4 +1,4 @@
-"""Leak detection for District Metered Areas — rule-based.
+"""Leak detection for District Metered Areas — rule-based, no AI.
 
 1. Minimum Night Flow (MNF): between 02:00 and 04:00 almost nobody uses water,
    so the inlet flow ≈ legitimate night use + leakage. If the measured night flow
