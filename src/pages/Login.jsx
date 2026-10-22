@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { api, saveSession } from '../lib/api'
 import { LOGO_SRC } from '../lib/brand'
 
+// Set to true to show the one-click demo sign-in. Judges sign in with the credentials given in the submission.
+const SHOW_DEMO_SHORTCUTS = false
+
 const DEMO_EMAIL = { staff: 'operator@nexora.demo', resident: 'resident@nexora.demo' }
 
 function Login({ mode, onLogin, onBack }) {
@@ -73,7 +76,7 @@ function Login({ mode, onLogin, onBack }) {
           </button>
         )}
 
-        {!registering && (
+        {SHOW_DEMO_SHORTCUTS && !registering && (
           <button type="button" className="ov-link cx-auth-switch" disabled={busy} onClick={() => submit(null, DEMO_EMAIL[mode])}>
             Sign in with the demo account
           </button>

@@ -20,7 +20,7 @@ REAL_DEVICE_GRACE_S = 120
 
 state = {
     "sim_enabled": True,
-    "leak": {"Zone A": 0.0, "Zone B": 0.0, "Zone C": 0.9},
+    "leak": {"Zone A": 0.0, "Zone B": 0.0, "Zone C": config.SEED_HIDDEN_LEAK_M3H},
     "rain_target": 0.0,
     "overrides": {},
     "flood_stage": {},
@@ -391,7 +391,7 @@ def sim_value(dev, now, prev, leak=None, rain=None):
 
 def backfill(days=7):
     """Generate a week of 15-minute history (clearly sourced 'sim') so night-flow analysis has data on first run.
-    Zone C carries a 0.9 m³/h hidden leak that began 3 nights ago."""
+    Zone C carries a hidden leak (NEXORA_SEED_LEAK_M3H, default none) that began 3 nights ago."""
     if db.q1("SELECT 1 FROM readings LIMIT 1"):
         return
     devs = [d for d in db.q("SELECT * FROM devices") if d["kind"] in ("flow", "pressure", "rain", "level")]
@@ -402,7 +402,7 @@ def backfill(days=7):
     rows = []
     showers = [(now - timedelta(days=5, hours=-15), 2.5, 35), (now - timedelta(days=2, hours=-17), 1.5, 22)]
     while t <= now:
-        leak = {"Zone A": 0.0, "Zone B": 0.0, "Zone C": 0.9 if t >= leak_start else 0.0}
+        leak = {"Zone A": 0.0, "Zone B": 0.0, "Zone C": config.SEED_HIDDEN_LEAK_M3H if t >= leak_start else 0.0}
         rain = 0.0
         for start, dur_h, peak in showers:
             dt = (t - start).total_seconds() / 3600

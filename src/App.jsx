@@ -23,6 +23,9 @@ import ResidentApp from './pages/ResidentApp'
 import DigitalTwin from './pages/DigitalTwin'
 import IntelligenceGraph from './pages/IntelligenceGraph'
 
+// Set to true to show the one-click guided demo on the landing page and the demo sign-in on the login page.
+const SHOW_DEMO_SHORTCUTS = false
+
 function CommandCentre({ session, onLogout, onExit, demo, onDemoEnd }) {
   const [activePage, setActivePage] = useState('overview')
   const [targetSensor, setTargetSensor] = useState(null)
@@ -286,11 +289,13 @@ function App() {
 
             </button>
 
+            {SHOW_DEMO_SHORTCUTS && (
             <button className="demo-entry-btn" onClick={startDemo} disabled={demoBusy}>
 
               {demoBusy ? 'Starting…' : 'Run guided demo'} <b>▶</b>
 
             </button>
+            )}
 
           </div>
 

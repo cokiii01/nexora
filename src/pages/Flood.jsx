@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ApiDown, Card, LineChart, Loading, PageHead, Stage, Stat } from '../components/ui'
 import { stageLabel } from '../lib/labels'
-import { api, fmt, usePoll } from '../lib/api'
+import { fmt, usePoll } from '../lib/api'
 
 const ORDER = ['NORMAL', 'WASPADA', 'AMARAN', 'BAHAYA']
 
@@ -41,12 +41,10 @@ function SensorCard({ s, i, selected, onSelect }) {
   )
 }
 
-function Flood({ session }) {
+function Flood() {
   const { data, error, loading } = usePoll('/flood', 3000)
   const [sel, setSel] = useState('DL-A1')
   const series = usePoll(`/devices/${sel}/series?hours=24`, 10000)
-  const [msg, setMsg] = useState('')
-  const staff = session?.user?.role !== 'resident'
 
   if (loading && !data) return <><ApiDown error={error} /><Loading /></>
   if (!data) return <ApiDown error={error} />
@@ -57,13 +55,6 @@ function Flood({ session }) {
   const worst = levels.filter((s) => !s.fault).reduce((w, s) => (ORDER.indexOf(s.stage) > ORDER.indexOf(w) ? s.stage : w), 'NORMAL')
   const selDev = levels.find((s) => s.device_id === sel) || levels[0]
   const pts = series.data?.points || []
-
-  const setRain = async (mm) => {
-    try {
-      await api('/sim/rain', { method: 'POST', body: { mm_per_h: mm } })
-      setMsg(mm ? `Simulated ${mm} mm/h rain — watch the drains rise.` : 'Rain stopped — levels will recede.')
-    } catch (e) { setMsg(e.message) }
-  }
 
   return (
     <section className="ov cx-module">
@@ -92,17 +83,6 @@ function Flood({ session }) {
             bands={selDev ? Object.entries(selDev.meta.thresholds).map(([k, v]) => ({ y: v, label: stageLabel(k), tone: k === 'BAHAYA' ? 'crit' : k === 'AMARAN' ? 'orange' : 'warn' })) : []}
             series={[{ label: 'Level', tone: 'blue', points: pts.map((p) => ({ x: new Date(p.ts), y: p.value })) }]}
           />
-          {staff && (
-            <div className="cx-simbox">
-              <span className="cx-simbox-label">Demo · simulate rainfall</span>
-              <div className="cx-form-row">
-                <button type="button" className="ov-btn" onClick={() => setRain(0)}>Stop rain</button>
-                <button type="button" className="ov-btn" onClick={() => setRain(25)}>Heavy 25 mm/h</button>
-                <button type="button" className="ov-btn primary" onClick={() => setRain(90)}>Cloudburst 90 mm/h</button>
-              </div>
-              {msg && <p className="ov-footnote">{msg}</p>}
-            </div>
-          )}
         </Card>
       </div>
     </section>

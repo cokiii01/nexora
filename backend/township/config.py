@@ -122,5 +122,7 @@ DEMO_USERS = [
     ("operator@nexora.demo", "Ops Command", "operator", None, None),
     ("manager@nexora.demo", "Township Manager", "manager", None, None),
 ]
+# Seeded hidden leak in Zone C (m3/h, begins 3 nights before first start). 0 = clean township; set 0.9 for the scripted demo story.
+SEED_HIDDEN_LEAK_M3H = float(os.environ.get("NEXORA_SEED_LEAK_M3H", 0.0))
 DEMO_PASSWORD = os.environ.get("NEXORA_DEMO_PASSWORD", "nexora123")
 DEVICE_KEY_DEFAULT = os.environ.get("NEXORA_DEVICE_KEY", "nexora-dev-key")
