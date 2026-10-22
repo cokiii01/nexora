@@ -169,3 +169,4 @@ Make the poster from its first frame: `ffmpeg -i nexora-township.mp4 -frames:v 1
 ## Intro splash
 
 `src/components/Intro.jsx`: the logo spins, the name appears, then the page opens (about 3 s, once per browser tab, click or any key to skip, off when the visitor prefers reduced motion). To see it again, open a new tab or clear `nexora-intro-seen` from Session Storage. To remove it, delete the `{intro && <Intro … />}` line in `src/App.jsx`.
+trigger deploy
