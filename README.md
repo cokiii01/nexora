@@ -1,172 +1,158 @@
-# NEXORA — Township Operations Platform
+# NEXORA
 
-Track: **Planet** — water conservation and climate resilience.
+**Township water that watches itself, with a person still in charge.**
 
-**One problem:** township water fails silently — hidden leaks, blocked drains and flood blind spots, and sensors that die unnoticed. NEXORA catches each early and keeps a person in charge of the response.
-Built for the Sime Darby Property University Hackathon — *Township of Tomorrow*.
+Planet track · Sime Darby Property University Hackathon 2026 · *Township of Tomorrow*  
 
-NEXORA turns cheap sensors and resident reports into **jobs that get fixed**. The core engines are rule-based,
-so every alert can be explained to a judge or an engineer.
 
-| Module | What it does | How (no AI) |
-|---|---|---|
-| **Water & leaks** | Finds hidden leaks per zone and puts an RM figure on them | Minimum Night Flow (02:00–04:00) per District Metered Area, plus a live demand-profile check for bursts |
-| **Flood warning** | Drain and pond levels with Normal → Alert → Warning → Danger stages (JPS); residents of that zone get alerts | Thresholds with hysteresis, rate-of-rise, Telegram bot + in-app feed |
-| **Sensor health** | Spots a broken sensor and keeps its readings out of the alarms | Impossible value (range check) or N identical readings while the rain gauge reports rain (flatline); opens a maintenance job |
-| **Dispatch approval** | A sensor rule opens the job, a person approves sending the crew | Flood and water-leak jobs raised by sensors wait in *Awaiting approval*; the API refuses to assign or start them until approved (HTTP 409). Resident flood alerts are not held back |
-| **Work orders** | Every report and sensor alert becomes a job with a team, an SLA clock, a timeline and a resident rating | SLA per category, auto-assign, status flow, public tracking code |
-| **Resident Connect** | Mobile PWA: report with photo + GPS, track like a parcel, rate the fix, receive zone alerts | Installable to the phone home screen |
-| **Devices** | Live sensor list; simulator ↔ real ESP32 on the same API | `POST /api/v2/ingest` with a per-device key |
-| **Climate-resilience report** | Flood exposure by sensor, approval time, sensor availability and recoverable water; print to PDF, CSV export | `GET /api/v2/reports/resilience`, computed from stored alerts and jobs; estimates are labelled |
-| **Business case** | Editable ROI, a flood "cost of waiting" comparison and a *Township Care* per-home-per-month model for after handover | Live water loss pulled into the calculator; every assumption editable |
-| *Not in the app menu* | Waste routing prototype (code kept in `src/pages/Waste.jsx` and the backend `waste.py`) | Out of scope for the water focus |
+| | |
+|---|---|
+| Live app | https://nexora-phi-inky.vercel.app |
+| Backend API (health) | https://nexora-s3lb.onrender.com/api/health |
+| Judge login | `operator@nexora.demo` / `nexora123` |
 
-The **Explore** section holds two views wired to the live engine:
-
-- **Digital Twin (3D only)**: leaking zones pulse pink with their m³/day and RM/year; drains and the retention pond fill to
-  the real sensor level and change colour by stage; rain falls when the gauge reports rainfall. A **Live township
-  scenarios** bar (Pipe burst · Cloudburst · Heavy rain · Reset) triggers the real chain and switches to 3D.
-- **Intelligence Graph**: built from live data every 5 s — zones, sensors, infrastructure, active alerts, open work
-  orders, teams and residents. Red nodes need attention; click one to see what it's connected to.
-
-The old Agent console and Sustainability pages are no longer in the menu (their code is still in `src/pages/`). The 2D map, the old
-scenario simulator, the fake infrastructure panel and the IoT pipeline monitor were removed from Digital Twin.
+The free backend sleeps when idle, so open the health link first and wait until it says `ok` (about a minute). The database resets whenever the backend restarts, so the app always starts clean: no alerts and no work orders.
 
 ---
 
-## Run it locally (Windows)
+## The problem
 
-Needs **Node.js 20.19+** and **Python 3.11+**.
+Township water fails silently:
 
-```bat
-:: 1) Backend
+- **Hidden leaks.** At 3 am nobody is using water, so a leak can run for days unnoticed.
+- **Flood blind spots.** A drain blocks, and the first sign is a flooded road.
+- **Sensors that die unnoticed.** A frozen sensor either lies or stays silent.
+
+NEXORA catches each one early, explains why it raised the alert, and turns it into a job that a person approves and a crew fixes.
+
+## What it does
+
+| Module | What it does | How it works |
+|---|---|---|
+| **Water and leaks** | Finds hidden leaks per zone and puts a figure on the water lost | Minimum night flow (02:00 to 04:00) per zone, plus a live demand-profile check for bursts |
+| **Flood warning** | Drain and pond levels move through Normal, Alert, Warning, Danger; residents in that zone are alerted | Staged thresholds with a buffer (hysteresis) so alerts do not flicker, plus rate of rise |
+| **Sensor health** | Detects a broken sensor and keeps its readings out of the alarms | Range check, or 8 identical readings while the rain gauge shows rain (flatline); opens a repair job |
+| **Dispatch approval** | A rule opens the job, a person decides | Sensor-raised flood and leak jobs wait for approval. The API refuses to assign them without it (HTTP 409) |
+| **Work orders** | Every alert and resident report becomes a job | Team, SLA clock, timeline, tracking code, resident rating |
+| **Digital Twin (3D)** | The township in 3D, driven by live data | Leaking zones pulse, drains and the pond fill to the real sensor level, rain falls when the gauge reports rain |
+| **Intelligence Graph** | Cause and effect on one screen | Zones, sensors, alerts, jobs, teams and residents linked from live data, refreshed every 5 s |
+| **Resident Connect** | Phone app for residents | Report with photo and GPS, track like a parcel, receive zone alerts, installable PWA |
+| **Climate-resilience report** | Evidence an event leaves behind | Flood exposure, approval time, sensor availability, recoverable water; print to PDF or CSV |
+| **Business case** | What acting early is worth | Editable assumptions, written-out formulas, cost of waiting vs acting early |
+
+## How to test it (for judges)
+
+1. Open the live app, wake the backend (see above), and sign in with the judge login.
+2. Open **Overview**. It starts clean: no leaks, no open jobs.
+3. Go to **Digital Twin → Live township scenarios** and press **Cloudburst 90 mm/h**.
+4. Watch the 3D drains and pond fill and change colour. Open **Flood** to see the stages rise.
+5. Open **Work orders**. A flood job appears and waits in *Awaiting approval*. Press **Approve dispatch**, then start and resolve it.
+6. Open **Devices** to see sensor health, **Intelligence Graph** for the cause-and-effect chain, and **Reports** and **Business case** for the evidence and cost views.
+7. Press **Reset weather & burst** to stop the rain. Open jobs stay until a crew resolves them.
+
+A **Pipe burst · Zone C** scenario is also there. After about 15 seconds the flow rule trips and a "Possible burst main" job appears under Work orders.
+
+## Tech stack
+
+**Frontend**
+- React 19 with Vite 8 (single-page app)
+- Plain CSS design system (`src/nexora-v10.css`, `src/App.css`), no UI framework
+- 3D Digital Twin: three.js with react-three-fiber and drei
+- Intelligence Graph: 3d-force-graph
+- Resident Connect: installable PWA (service worker and web manifest)
+- ESLint for code quality
+
+**Backend**
+- Python with FastAPI, served by Uvicorn
+- SQLite database (readings, devices, alerts, jobs, users)
+- A simulator ticks every 3 seconds and feeds the same ingest API a real device would use
+- Rule engines in `backend/township/`: water (night flow, burst), flood (stages), sensor health (range, flatline)
+- Role-based login (resident, operator, manager): PBKDF2 password hashes and session tokens
+- Optional Telegram alerts
+
+**Hardware path**
+- ESP32 with a JSN-SR04T ultrasonic sensor (`firmware/`)
+- A virtual ESP32 for testing without hardware (`backend/tools/esp32_sim.py`)
+
+**Hosting**
+- Frontend on Vercel, backend on Render (free tiers); both redeploy on every push to `main`
+
+## Where "intelligence" comes from
+
+The alerts are **rule-based on purpose**, so every alert can be explained to an engineer or a resident and nothing is a black box. The Intelligence Graph is built from live data and is not a chatbot. The backend also contains a small Random Forest model (scikit-learn) trained on **synthetic** data (`backend/train_model.py`). It is a prototype and is not used in the alerts above.
+
+## Data, sources and assumptions
+
+No proprietary data was provided or used.
+
+| Item | What it is |
+|---|---|
+| Sensor readings (flow, pressure, drain and pond level, rain) | **Simulated** until hardware is installed. A real ESP32 posts to the same API (`POST /api/v2/ingest`) |
+| Leak, flood and sensor-fault alerts | **Real logic** running on that simulated data |
+| Dispatch approval | **Real**: the API refuses unapproved dispatch with HTTP 409 |
+| Cost, tariff, CO₂ and hardware figures | **Editable scenario assumptions**, not verified savings. Defaults are in `backend/township/config.py`. Replace them with the township's own data before quoting a number |
+| Resident survey | 7 responses from an informal Google Form: a small sample, not statistically representative |
+
+## Run it locally
+
+Needs Node.js 20.19+ and Python 3.11+.
+
+```bash
+# 1) Backend
 cd backend
-py -m pip install -r requirements.txt
-py -m uvicorn main:app --reload --port 8000
+pip install -r requirements.txt
+python -m uvicorn main:app --reload --port 8000
 
-:: 2) Frontend (new terminal, project root)
+# 2) Frontend (new terminal, project root)
 npm install
 npm run dev
 ```
 
-Open http://localhost:5173 → **Explore NEXORA** → sign in with a demo account (one click):
+Open http://localhost:5173 and sign in with a demo account:
 
 | Account | Password | Sees |
 |---|---|---|
-| operator@nexora.demo | nexora123 | Command Centre, simulator controls |
-| manager@nexora.demo | nexora123 | Same + reports |
+| operator@nexora.demo | nexora123 | Command Centre and scenario controls |
+| manager@nexora.demo | nexora123 | Same, plus reports |
 | resident@nexora.demo | nexora123 | Resident Connect (Zone C) |
 
-On first start the backend creates `backend/nexora.db`, seeds 20 devices, a week of 15-minute readings
-(Zone C has a hidden 0.9 m³/h leak that began 3 nights ago) and a month of past jobs so reports aren't empty.
-Delete `nexora.db` to start fresh.
+On first start the backend creates `backend/nexora.db` and seeds 20 devices, a week of readings and a month of past jobs. Delete the file to start fresh.
 
-## Guided demo (one click)
+Optional settings (environment variables):
 
-On the landing page press **Run guided demo**. NEXORA signs in as the demo operator and plays eight scenes:
-living township → a drain sensor freezes during a cloudburst (detected as a *sensor fault*) → the flood is still caught
-by the other sensors → the same event in 3D → Intelligence Graph → **a human approval** → cost of acting early vs. late →
-closing. Controls: **Space** pause · **← →** previous / next scene · **F** fullscreen · timeline dots jump back.
+| Variable | Purpose |
+|---|---|
+| `NEXORA_DEMO_PASSWORD` | Password for the three demo accounts (default `nexora123`) |
+| `NEXORA_SEED_LEAK_M3H` | Hidden Zone C leak in the seed data (default `0`, a clean start) |
+| `NEXORA_REQUIRE_APPROVAL` | `0` turns the approval step off |
+| `NEXORA_FLATLINE_N` | Identical readings that mean a frozen sensor (default `8`) |
+| `NEXORA_CORS_ORIGINS` | Allowed frontend URL |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | Optional Telegram alerts |
 
-How it stays honest:
-- Each scene triggers the real backend (rain, sensor fault) and then **waits for the real state** (fault confirmed,
-  Warning stage reached, job approved) — timers only pace the captions.
-- Scene 6 waits until *you* press **Approve dispatch**. There is no auto-approve.
-- It ends at "crew assigned, work under way" — it never claims the flood is resolved.
-- If the backend is slow it keeps polling; if a step cannot start you get **Retry / Skip**.
-- **Replay** and **Exit demo** call a reset: rain off, sensors repaired, and the demo's open flood / sensor-fault jobs are
-  *closed with a note* (nothing is deleted). Jobs raised by residents and the hidden-leak job are left alone.
+Virtual ESP32 (no hardware needed):
 
-The cost scene uses **illustrative** assumptions (homes exposed, damage per home, share flooded early vs. late, crew rate)
-written out as a formula and editable under *Business case → Cost of waiting*. Replace them with the township's own claims
-and call-out data before quoting a number.
-
-## 3-minute pitch demo script (manual)
-
-1. **Overview** — "Zone C is losing ~19 m³ of water a day. Nobody reported it — the night flow did."
-2. **Water** — show the pink nights on Zone C and the RM/year figure. Open the auto-created work order.
-3. **Work orders** — the job is *Awaiting approval*: review the card and **Approve dispatch**, then start → resolve. Back on Water: *"Repaired · verify tonight"*.
-4. **Digital Twin → Live scenarios → Cloudburst** (or pour water under the real sensor). The 3D model switches on:
-   rain falls, the pond and drains fill and turn orange/red. Then **Flood**: Drains climb to Warning,
-   a work order opens itself, and…
-5. **Resident Connect on a phone** — the resident in Zone C already has the Danger alert. Report a blocked
-   drain with a photo; it appears on the operator's screen instantly with a 24 h SLA.
-6. **Resilience report** — open it to show the evidence the event left behind.
-7. **Business case** — payback in months, cost per home per month.
-
-Second terminal, no hardware needed — a virtual ESP32 posting over HTTP exactly like the firmware:
-
-```bat
+```bash
 cd backend
-py tools\esp32_sim.py --scenario storm
-py tools\esp32_sim.py --scenario burst --zone A
+python tools/esp32_sim.py --scenario storm
 ```
-
-## Hardware (when you reach the Top 10)
-
-See [`firmware/README.md`](firmware/README.md): ESP32 + JSN-SR04T ultrasonic (~RM 80–120 for a demo rig), wiring,
-and `firmware/nexora_node/nexora_node.ino`. Flash it, set `DEVICE_ID = "DL-A1"` and the device row flips
-from *Sim* to *ESP32* — no backend change.
-
-## Telegram alerts (optional, free)
-
-1. In Telegram, talk to **@BotFather** → `/newbot` → copy the token.
-2. Create a group "Penduduk Zone C", add the bot, send a message, then open
-   `https://api.telegram.org/bot<TOKEN>/getUpdates` to read the group's `chat.id` (negative number).
-3. Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` (or `TELEGRAM_CHAT_ZONE_C`) before starting uvicorn.
 
 ## Deploy (free tiers)
 
-- **Backend → Render**: New → Blueprint → this repo (`render.yaml`). Set `NEXORA_CORS_ORIGINS` to your Vercel URL.
-  Free instances sleep after inactivity (first request ~1 min) and have no persistent disk, so the
-  database re-seeds on restart. That's fine for judging; add a disk on a paid plan for real data.
-- **Frontend → Vercel**: import the repo, framework *Vite*, env `VITE_API_URL=https://<your-render-app>.onrender.com`.
-- Resident Connect is a PWA — on the phone open the Vercel URL → *Add to Home Screen*.
+- **Backend on Render:** New → Blueprint → this repo (`render.yaml`). Set `NEXORA_CORS_ORIGINS` to the Vercel URL. Free instances sleep when idle and have no persistent disk, so the database re-seeds on restart.
+- **Frontend on Vercel:** import the repo, framework *Vite*, env `VITE_API_URL=https://<your-render-app>.onrender.com`.
+- **Phone app:** open the Vercel URL on a phone and choose *Add to Home Screen*.
 
-## Where the numbers come from
-
-All engineering assumptions live in `backend/township/config.py` and are shown on screen:
-night use 1.7 L/property/h, background leakage 1 L/property/h, hour-day factor 20, water cost RM 2.00/m³
-(placeholder — confirm the operator's tariff), 220 L/person/day, truck 0.4 L/km, diesel 2.68 kg CO₂/L,
-road circuity 1.3. Change them there (or via env vars) and every screen updates.
-
-Governance and sensor health: `NEXORA_REQUIRE_APPROVAL=0` turns the approval step off (sensor jobs auto-assign again).
-`NEXORA_FLATLINE_N` (default 8) is how many identical readings in a row mean a frozen sensor — the default suits the 3 s
-simulator; raise it (e.g. 60) for a node that reports once a minute. A level sensor is only judged for flatlining while the
-rain gauge reports ≥ 5 mm/h, because still water in dry weather is normal.
-
-**Be upfront in the pitch:** sensor data is simulated until hardware is installed; zone sizes and
-historical jobs are demo seed data. The detection logic, workflows and API are real.
-
-## Architecture
+## Project layout
 
 ```
-ESP32 nodes ──HTTP JSON──▶  FastAPI /api/v2/ingest ──▶ rule engines (water · flood · pressure)
-virtual ESP32 / simulator ─┘        │                         │
-                                    ▼                         ▼
-                              SQLite (readings,         alerts ─▶ notifications (in-app + Telegram)
-                              devices, jobs, users)        └────▶ work orders (SLA, team, timeline)
-                                    │
-React (Vite) Command Centre  ◀──────┤  polling every 3–10 s
-Resident Connect PWA         ◀──────┘
+src/            React app (pages, components, 3D scenes, API client)
+backend/        FastAPI app, rule engines, simulator, ESP32 simulator
+firmware/       ESP32 sketch and wiring notes
+public/         Logo, icons, landing video, service worker
+render.yaml     Backend deploy blueprint
 ```
 
-Key files: `src/demo/` (scenes, director, overlay), `backend/township/` (api, engine, water, waste, workorders, notify, auth, config),
-`src/pages/` (Water, Flood, WorkOrders, Devices, Reports, Roi, Waste (prototype, not in the menu), ResidentApp, Login, Overview),
-`src/lib/api.js` (API client), `src/nexora-v10.css` (design system).
+## Credits and licences
 
-## Replace the logo
-
-One file: `public/nexora-logo.svg` (used in the landing page, sidebar, login and resident app). Also replace `public/favicon.svg` (browser tab) and, for the installable app, `public/icon-192.png` and `public/icon-512.png`. If your logo is a PNG, drop it in `public/` and change the path in `src/lib/brand.js`.
-
-## Replace the landing video
-
-File: `public/nexora-township.mp4` (plus `public/nexora-township-clean.png`, the still shown while it loads).
-Best results: 1920x1080 or 3840x2160, H.264 MP4, no audio, 8–15 seconds, under about 15 MB, no text or labels burned in.
-Compress a 4K file with: `ffmpeg -i in.mp4 -vf scale=1920:-2 -c:v libx264 -crf 22 -an -movflags +faststart nexora-township.mp4`
-Make the poster from its first frame: `ffmpeg -i nexora-township.mp4 -frames:v 1 nexora-township-clean.png`
-
-## Intro splash
-
-`src/components/Intro.jsx`: the logo spins, the name appears, then the page opens (about 3 s, once per browser tab, click or any key to skip, off when the visitor prefers reduced motion). To see it again, open a new tab or clear `nexora-intro-seen` from Session Storage. To remove it, delete the `{intro && <Intro … />}` line in `src/App.jsx`.
-trigger deploy
+Fonts: Inter and Geist (Google Fonts, open licence). Libraries: React, Vite, three.js, react-three-fiber, drei, 3d-force-graph, FastAPI, Uvicorn, scikit-learn.  
+Landing video and image: [add source and licence here].
