@@ -166,6 +166,10 @@ const STATIC_GRAPH = {
   ],
 }
 
+// water-only: drop the legacy energy / traffic / streetlight items from the offline fallback graph
+const LEGACY = new Set(['EN-12', 'TR-08', 'SL-204', 'WT-03', 'Substation A', 'Junction B', 'Streetlight Grid', 'Traffic Alert B', 'Road Team 01', 'Electrical Team 03', 'INC-0038', 'INC-0036'])
+STATIC_GRAPH.nodes = STATIC_GRAPH.nodes.filter((x) => !LEGACY.has(x.id))
+STATIC_GRAPH.links = STATIC_GRAPH.links.filter((x) => !LEGACY.has(x.source) && !LEGACY.has(x.target))
 STATIC_GRAPH.nodes.forEach((node) => { node.ring = STATIC_RING.includes(node.id) })
 
 /* ------------------------------------------------------------------ */
@@ -694,6 +698,11 @@ function IntelligenceGraph() {
 
       <div className="ig-stage">
         <div ref={containerRef} className="ig-canvas" />
+
+        <div className="ig-hint">
+          drag untuk putar · scroll untuk zoom · klik node untuk teroka
+        </div>
+
         <div className="ig-legend">
           <Legend color={COLORS.core} label="Core" />
           <Legend color={COLORS.zone} label="Zone" />

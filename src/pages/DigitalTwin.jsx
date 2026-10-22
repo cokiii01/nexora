@@ -5142,13 +5142,7 @@ function DigitalTwin({
 
 
 
-            <div className={`dt-sync ${liveWT04.connected ? 'gateway-online' : 'gateway-offline'}`}>
-
-              <span className="live-dot"></span>
-
-              {liveWT04.connected ? 'GATEWAY LIVE' : 'GATEWAY OFFLINE'}
-
-            </div>
+            {/* gateway badge removed for the water-only demo */}
 
           </div>
 

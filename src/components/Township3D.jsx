@@ -639,30 +639,6 @@ function TownshipScene({
 
       {/* Sensors (ids, values, statuses, handlers unchanged) */}
       <SensorMarker
-        position={[-7.1, 0.1, -1.9]}
-        id="EN-12"
-        label="ENERGY"
-        value={`${liveEN12?.value ?? 428} kW`}
-        status={liveEN12?.status ?? 'Normal'}
-        onClick={() => onSensorSelect?.('EN-12')}
-      />
-      <SensorMarker
-        position={[7.1, 0.1, -0.9]}
-        id="TR-08"
-        label="TRAFFIC"
-        value={`${liveTR08?.value ?? 64} veh/min`}
-        status={liveTR08?.status ?? 'Normal'}
-        onClick={() => onSensorSelect?.('TR-08')}
-      />
-      <SensorMarker
-        position={[-2.2, 0.1, 3.4]}
-        id="WT-03"
-        label="WATER FLOW"
-        value={`${liveWT03?.value ?? 124} L/min`}
-        status={liveWT03?.status ?? 'Normal'}
-        onClick={() => onSensorSelect?.('WT-03')}
-      />
-      <SensorMarker
         position={[2.4, 0.1, 4.2]}
         id="WT-04"
         label="WATER PRESSURE"
@@ -743,6 +719,10 @@ function Township3D({
           <span className="township-3d-live-dot" />
           LIVE MODEL
         </div>
+      </div>
+
+      <div className="township-3d-help">
+        DRAG TO ROTATE · RIGHT-DRAG TO PAN
       </div>
 
       <Canvas
