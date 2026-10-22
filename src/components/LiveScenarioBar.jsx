@@ -33,7 +33,7 @@ function LiveScenarioBar({ onRun }) {
       setActive(sc.key)
       onRun?.()
       setMsg(sc.key === 'burst'
-        ? 'Burst injected. After about 15 seconds the flow rule trips: a “Possible burst main” alert and work order open for Zone C (see Work orders).'
+        ? 'Burst injected. After about 15 seconds the flow rule trips: a “Possible burst main” work order opens for Zone C and the zone pulses in 3D.'
         : 'Rain started. Watch the drains fill in 3D — residents are alerted as each stage is crossed.')
     } catch (e) {
       setMsg(e.status === 401 || e.status === 403 ? 'Sign in as operator to run live scenarios.' : e.message)

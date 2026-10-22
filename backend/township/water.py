@@ -1,4 +1,4 @@
-"""Leak detection for District Metered Areas — rule-based, no AI.
+"""Leak detection for District Metered Areas — rule-based.
 
 1. Minimum Night Flow (MNF): between 02:00 and 04:00 almost nobody uses water,
    so the inlet flow ≈ legitimate night use + leakage. If the measured night flow
@@ -102,13 +102,24 @@ def analyse(zone, live_value=None):
         if row:
             repaired_at = row["resolved_at"]
             leaking = False
-    loss_m3_day = round(excess * config.HOUR_DAY_FACTOR, 2) if leaking else 0.0
-
     now = datetime.now()
     live_exp = expected_flow(zone, now)
     dev_pct = None
     if live_value is not None and live_exp > 0:
         dev_pct = round((live_value - live_exp) / live_exp * 100, 1)
+
+    # A burst shows up in the live flow before any night window can catch it: an open burst job
+    # while the inlet flow is still well above the demand profile counts as a leak right now.
+    live_burst = False
+    if live_value is not None and live_exp > 0 and not leaking:
+        live_excess = live_value - live_exp
+        if live_excess > 0.4 and live_excess / live_exp > 0.35:
+            live_burst = bool(db.q1("SELECT 1 FROM work_orders WHERE category='water_leak' AND zone=? AND source='sensor' "
+                                    "AND status NOT IN ('RESOLVED','CLOSED')", (zone,)))
+            if live_burst:
+                excess = live_excess
+                leaking = True
+    loss_m3_day = round(excess * (24 if live_burst else config.HOUR_DAY_FACTOR), 2) if leaking else 0.0
 
     baseline = [n["mnf"] for n in nights if n["mnf"] is not None and not n["leak"]]
     return {
@@ -121,6 +132,7 @@ def analyse(zone, live_value=None):
         "excess_m3h": round(excess, 3),
         "leak_suspected": leaking,
         "leak_since": since,
+        "live_burst": live_burst,
         "repaired_at": repaired_at,
         "verification_pending": bool(repaired_at),
         "loss_m3_per_day": loss_m3_day,

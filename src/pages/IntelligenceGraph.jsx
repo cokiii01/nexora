@@ -759,7 +759,7 @@ function IntelligenceGraph() {
         .ig-hud b { color: #6f6a82; font-weight: 600; margin-left: 12px; }
         .ig-hud b:first-child { margin-left: 0; }
 
-        .ig-hint { position: absolute; z-index: 8; left: 28px; bottom: 24px; color: #5d5870; font-size: 10px; pointer-events: none; }
+        .ig-hint { position: absolute; z-index: 8; left: 28px; bottom: 64px; color: #5d5870; font-size: 10px; pointer-events: none; }
 
         .ig-legend {
           position: absolute; z-index: 8; bottom: 20px; left: 50%; transform: translateX(-50%);
